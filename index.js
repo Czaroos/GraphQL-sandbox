@@ -2,12 +2,12 @@ const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefs = gql`
   type Query {
-    type Launch {
+    type Post {
       id: ID!
-      site: String
-      mission: Mission
-      rocket: Rocket
-      isBooked: Boolean!
+      Title: String
+      Text: String
+      Likes: Int
+      Shares: Int
     }
   }
 `;
