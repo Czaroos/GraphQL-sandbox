@@ -6,13 +6,35 @@ const typeDefs = gql`
   type Post {
     id: ID!
     title: String!
-    images: [Images]
+    images: [Image]
     text: String!
     likes: Int!
     shares: Int!
     comments: [Comment]
-    thumbnail: Thumbnail
+    thumbnail: Image
     created: Date!
+  }
+
+  type Image {
+    link: String
+    alt: String
+  }
+
+  type Comment {
+    text: String
+    created: Date
+    user: User
+  }
+
+  type User {
+    name: String
+    email: String
+    role: Role
+  }
+
+  enum Role {
+    USER
+    ADMIN
   }
 `;
 
