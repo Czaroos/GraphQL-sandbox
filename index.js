@@ -35,8 +35,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    posts: [Post]
-    post(id: ID!): Post
+    getPosts: [Post]
+    getPostById(id: ID!): Post
   }
 
   interface MutationResponse {
