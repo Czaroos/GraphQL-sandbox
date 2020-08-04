@@ -4,8 +4,6 @@ const { Kind } = require('graphql/language');
 
 const typeDefs = gql`
   scalar Date
-  type MyType {
-  created: Date
 
   type Post {
     id: ID!
@@ -40,13 +38,17 @@ const typeDefs = gql`
     USER
     ADMIN
   }
-
- 
+  
+  type Query {
+    Posts: [Post]!
+    Post(id: ID!): Post
+  
   }
+  
 `;
 
 const resolvers = {
-  Query: {},
+
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
