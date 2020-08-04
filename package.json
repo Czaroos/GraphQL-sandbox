@@ -1,0 +1,23 @@
+{
+  "name": "graphql-sandbox",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Czaroos/GraphQL-sandbox.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Czaroos/GraphQL-sandbox/issues"
+  },
+  "homepage": "https://github.com/Czaroos/GraphQL-sandbox#readme",
+  "dependencies": {
+    "apollo-server": "^2.16.1",
+    "graphql": "^15.3.0"
+  }
+}
