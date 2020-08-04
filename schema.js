@@ -46,10 +46,23 @@ const typeDefs = gql`
     code: String!
     success: Boolean!
     message: String!
-    post(input: PostAndMediaInput): Post
+    post(input: PostInput): Post
   }
 
-  input PostAndMediaInput {
+  input PostInput {
+    title: String
+    text: String
+    imagesUrls: [String]
+  }
+
+  type CreateCommentMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    comment(input: CommentInput): Comment
+  }
+
+  input CommentInput {
     title: String
     text: String
     imagesUrls: [String]
