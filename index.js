@@ -3,8 +3,8 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 
 const typeDefs = gql`
-scalar Date
-type MyType {
+  scalar Date
+  type MyType {
   created: Date
 
   type Post {
@@ -20,20 +20,20 @@ type MyType {
   }
 
   type Image {
-    link: String
+    link: String!
     alt: String
   }
 
   type Comment {
-    text: String
-    created: Date
-    user: User
+    text: String!
+    created: Date!
+    user: User!
   }
 
   type User {
-    name: String
-    email: String
-    role: Role
+    name: String!
+    email: String!
+    role: Role!
   }
 
   enum Role {
