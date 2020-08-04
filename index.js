@@ -1,14 +1,18 @@
 const { ApolloServer, gql } = require('apollo-server');
 
 const typeDefs = gql`
-  type Query {
-    type Post {
-      id: ID!
-      Title: String
-      Text: String
-      Likes: Int
-      Shares: Int
-    }
+  scalar Date
+
+  type Post {
+    id: ID!
+    title: String!
+    images: [Images]
+    text: String!
+    likes: Int!
+    shares: Int!
+    comments: [Comment]
+    thumbnail: Thumbnail
+    created: Date!
   }
 `;
 
