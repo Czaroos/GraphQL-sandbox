@@ -8,18 +8,13 @@ const typeDefs = gql`
   type Post {
     id: ID!
     title: String!
-    images: [Image]
+    imageUrls: [String]
     text: String!
     likes: Int!
     shares: Int!
     comments: [Comment]
-    thumbnail: Image
+    thumbnailUrl: String
     created: Date!
-  }
-
-  type Image {
-    link: String!
-    alt: String
   }
 
   type Comment {
@@ -38,17 +33,33 @@ const typeDefs = gql`
     USER
     ADMIN
   }
-  
+
   type Query {
-    Posts: [Post]!
-    Post(id: ID!): Post
-  
+    posts: [Post]
+    post(id: ID!): Post
   }
-  
+
+  interface MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+  }
+
+  type CreatePostMutationResponse implements MutationResponse {
+    code: String!
+    success: Boolean!
+    message: String!
+    post(input: PostAndMediaInput): Post
+  }
+
+  input PostAndMediaInput {
+    title: String
+    text: String
+    imagesUrls: [String]
+  }
 `;
 
 const resolvers = {
-
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
@@ -60,18 +71,12 @@ const resolvers = {
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
-        return parseInt(ast.value, 10); 
+        return parseInt(ast.value, 10);
       }
       return null;
     },
   }),
-
 };
-
-
-
-
-
 
 const server = new ApolloServer({ typeDefs, resolvers });
 
