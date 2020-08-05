@@ -12,6 +12,7 @@ const typeDefs = gql`
     comments: [Comment]
     thumbnailUrl: String
     created: Date!
+    tag: [Tag]
   }
 
   type Comment {
@@ -24,6 +25,14 @@ const typeDefs = gql`
     name: String!
     email: String!
     role: Role!
+  }
+
+  type Tag {
+    tag: String
+  }
+
+  type BlogsIFollow {
+    url: String
   }
 
   enum Role {
