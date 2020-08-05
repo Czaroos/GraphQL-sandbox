@@ -1,0 +1,64 @@
+const { GraphQLScalarType } = require('graphql');
+const { Kind } = require('graphql/language');
+
+const posts = [
+  {
+    id: 1,
+    title: 'tytul',
+    text: 'tekst',
+    createdAt: Date.now,
+  },
+  {
+    id: 2,
+    title: 'tytul2',
+    text: 'tekst2',
+    createdAt: Date.now,
+
+  },
+];
+const comments = [
+  {
+    postId: 1,
+    text: 'text',
+    createdAt: Date.now,
+    user: [],
+  },
+  {
+    postId: 2,
+    text: 'text2',
+    createdAt: Date.now,
+    user: [],
+  },
+    {
+    postId: 1,
+    text: 'text3',
+    createdAt: Date.now,
+    user: [],
+  },
+];
+const resolvers = {
+  Query: {
+    getPosts: () => posts,
+    getPostById: (_, { id }) => posts.find((post) => post.id == id),
+    getPostComments: (_, { postId }) => comments.find((comment) => comment.postId == postId),
+  },
+
+  Date: new GraphQLScalarType({
+    name: 'Date',
+    description: 'Date custom scalar type',
+    parseValue(value) {
+      return new Date(value);
+    },
+    serialize(value) {
+      return new Date(value).toDateString();
+    },
+    parseLiteral(ast) {
+      if (ast.kind === Kind.INT) {
+        return parseInt(ast.value, 10);
+      }
+      return null;
+    },
+  }),
+};
+
+module.exports = resolvers;
