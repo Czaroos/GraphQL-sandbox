@@ -18,11 +18,7 @@ const resolvers = {
       return null;
     },
   }),
-  MutationResponse: {
-    __resolveType(mutationResponse, context, info) {
-      return null;
-    },
-  },
+ 
 };
 
 module.exports = resolvers;
