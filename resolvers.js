@@ -16,11 +16,31 @@ const posts = [
     comments: [],
   },
 ];
-
+const comment = [
+  {
+    postId: 1,
+    text: 'text',
+    createdAt: Date.now,
+    user: [],
+  },
+  {
+    postId: '1',
+    text: 'text2',
+    createdAt: Date.now,
+    user: [],
+  },
+  {
+    postId: '2',
+    text: 'text3',
+    createdAt: Date.now,
+    user: [],
+  },
+];
 const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
+    getPostComments: () => (_, { postId, id }) => comment.find((comment) => post.id == comment.postId),
   },
 
   Date: new GraphQLScalarType({
