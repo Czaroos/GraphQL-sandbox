@@ -7,10 +7,10 @@ const gql = require('graphql-tag');
 const server = new ApolloServer({ typeDefs, resolvers });
 const { query } = createTestClient(server);
 
-it('Get all posts', async () => {
-  const GET_POSTS = gql`
-    query GET_POSTS {
-      getPosts {
+it('Get one post by ID', async () => {
+  const GET_POST_BY_ID = gql`
+    query GET_POST_BY_ID($id: ID = 1) {
+      getPostById(id: $id) {
         id
         title
         text
@@ -26,11 +26,11 @@ it('Get all posts', async () => {
   `;
 
   const result = await query({
-    query: GET_POSTS,
+    query: GET_POST_BY_ID,
+    variables: {
+      id: 1,
+    },
   });
 
-  expect(result.data.getPosts.length).toEqual(2);
-  expect(result.data.getPosts).toBeTruthy;
-  expect(result.data.getPosts[0]).toBeTruthy;
-  expect(result.data.getPosts[1]).toBeTruthy;
+  expect(result.data.getPostById).toBeTruthy();
 });
