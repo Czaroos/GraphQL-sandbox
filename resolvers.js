@@ -40,7 +40,7 @@ const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
-    getPostComments: (_, { postId }) => comments.find((comment) => comment.postId == postId),
+    getPostComments: (_, { postId }) => comments.filter((comment) => comment.postId == postId),
   },
 
   Date: new GraphQLScalarType({
