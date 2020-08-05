@@ -1,7 +1,10 @@
 const { createTestClient } = require('apollo-server-testing');
-const { server } = require('../index');
+const { ApolloServer } = require('apollo-server');
+const typeDefs = require('../schema');
+const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
 
+const server = new ApolloServer({ typeDefs, resolvers });
 const { query } = createTestClient(server);
 
 it('Get all posts', async () => {
@@ -27,6 +30,5 @@ it('Get all posts', async () => {
   });
 
   expect(result.data.getPosts.length).toEqual(2);
-  expect(result.data.getPosts[0]).not.toBeNull();
-  expect(result.data.getPosts[1]).not.toBeNull();
+  expect(result.data.getPosts).toBeTruthy;
 });
