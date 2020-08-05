@@ -20,6 +20,11 @@ const resolvers = {
       return null;
     },
   }),
+  MutationResponse: {
+    __resolveType(mutationResponse, context, info){
+      return null;
+    },
+  },
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
