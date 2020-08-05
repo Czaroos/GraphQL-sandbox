@@ -1,4 +1,5 @@
 const { gql } = require('apollo-server');
+
 const typeDefs = gql`
   scalar Date
 
@@ -16,6 +17,7 @@ const typeDefs = gql`
   }
 
   type Comment {
+    postId: ID!
     text: String!
     created: Date!
     user: User!
@@ -41,8 +43,11 @@ const typeDefs = gql`
   }
 
   type Query {
-    posts: [Post]
-    post(id: ID!): Post
+    getPosts: [Post]
+    getPostById(id: ID!): Post
+    getPostComments(postId: ID!): [Comment]
+    getTags: [Tag]
+    getBlogsIFollow: [BlogsIFollow]
   }
 
   interface MutationResponse {
@@ -61,7 +66,6 @@ const typeDefs = gql`
   input PostInput {
     title: String
     text: String
-    imagesUrls: [String]
   }
 
   type CreateCommentMutationResponse implements MutationResponse {
