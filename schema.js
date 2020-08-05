@@ -33,7 +33,7 @@ const typeDefs = gql`
     tag: String
   }
 
-  type BlogsIFollow {
+  type BlogIFollow {
     url: String
   }
 
@@ -47,7 +47,7 @@ const typeDefs = gql`
     getPostById(id: ID!): Post
     getPostComments(postId: ID!): [Comment]
     getTags: [Tag]
-    getBlogsIFollow: [BlogsIFollow]
+    getBlogsIFollow: [BlogIFollow]
   }
 
   interface MutationResponse {
@@ -66,6 +66,7 @@ const typeDefs = gql`
   input PostInput {
     title: String
     text: String
+    imageUrls: [String]
   }
 
   type CreateCommentMutationResponse implements MutationResponse {
@@ -76,9 +77,7 @@ const typeDefs = gql`
   }
 
   input CommentInput {
-    title: String
     text: String
-    imagesUrls: [String]
   }
 `;
 
