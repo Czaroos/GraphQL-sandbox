@@ -6,20 +6,16 @@ const typeDefs = gql`
   type Post {
     id: ID!
     title: String!
-    imageUrls: [String]
     text: String!
-    likes: Int!
-    shares: Int!
     comments: [Comment]
-    thumbnailUrl: String
-    created: Date!
-    tag: [Tag]
+    createdAt: Date!
+    tags: [Tag]
   }
 
   type Comment {
     postId: ID!
     text: String!
-    created: Date!
+    createdAt: Date!
     user: User!
   }
 
@@ -50,34 +46,11 @@ const typeDefs = gql`
     getBlogsIFollow: [BlogIFollow]
   }
 
-  interface MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-  }
-
-  type CreatePostMutationResponse implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    post(input: PostInput): Post
-  }
-
-  input PostInput {
-    title: String
-    text: String
-    imageUrls: [String]
-  }
-
-  type CreateCommentMutationResponse implements MutationResponse {
-    code: String!
-    success: Boolean!
-    message: String!
-    comment(input: CommentInput): Comment
-  }
-
-  input CommentInput {
-    text: String
+  type Mutation {
+    createPost(title: String!, text: String!, tags: [Tag]): Post
+    createComment(postId: ID!, text: String!): Comment
+    addTag(tag: String!): Tag
+    addBlogIFollow(blogUrl: String!): BlogIFollow
   }
 `;
 
