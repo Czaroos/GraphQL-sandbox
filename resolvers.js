@@ -21,7 +21,11 @@ const comments = [
     postId: 1,
     text: 'text',
     createdAt: Date.now,
-    user: [],
+    user: {
+      name: 'String!',
+      email: 'String!',
+      role: 'USER'  
+    }
   },
   {
     postId: 2,
@@ -36,11 +40,30 @@ const comments = [
     user: [],
   },
 ];
+const tags = [
+  {  
+    tag: 'WH40K',
+  },
+  {
+   tag: 'Necrons'
+  },
+];
+const blogs = [
+  {  
+    url: 'https:/fdsfsdf',
+  },
+  {
+   url: 'https://aaaaaaaa.com'
+  },
+];
 const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
     getPostComments: (_, { postId }) => comments.filter((comment) => comment.postId == postId),
+    getTags: () => tags,
+    getBlogsIFollow: () => blogs,
+    
   },
 
   Date: new GraphQLScalarType({
