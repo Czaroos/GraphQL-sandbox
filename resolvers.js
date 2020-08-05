@@ -1,24 +1,26 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
+
 const posts = [
-    {
-      id: 1,
-      title: 'tytul',
-      text: 'tekst',
-      createdAt: Date.now,
-    },
-    {
-        id: 2,
-        title: 'tytul2',
-        text: 'tekst2',
-        createdAt: Date.now,
-        comments: []
-      },
-  ];
+  {
+    id: 1,
+    title: 'tytul',
+    text: 'tekst',
+    createdAt: Date.now,
+  },
+  {
+    id: 2,
+    title: 'tytul2',
+    text: 'tekst2',
+    createdAt: Date.now,
+    comments: [],
+  },
+];
+
 const resolvers = {
-    Query: {
-        getPosts: () => posts,
-      },
+  Query: {
+    getPosts: () => posts,
+  },
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
@@ -26,7 +28,7 @@ const resolvers = {
       return new Date(value);
     },
     serialize(value) {
-      return value.getTime();
+      return new Date(value).toDateString();
     },
     parseLiteral(ast) {
       if (ast.kind === Kind.INT) {
