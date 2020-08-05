@@ -20,7 +20,9 @@ const posts = [
 const resolvers = {
   Query: {
     getPosts: () => posts,
+    getPostById: (_, { id }) => posts.find((post) => post.id == id),
   },
+
   Date: new GraphQLScalarType({
     name: 'Date',
     description: 'Date custom scalar type',
