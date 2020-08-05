@@ -47,10 +47,9 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createPost(title: String!, text: String!, tags: [Tag]): Post
+    createPost(title: String!, text: String!, tags: [String]): Post
     createComment(postId: ID!, text: String!): Comment
     addTag(tag: String!): Tag
-    addBlogIFollow(blogUrl: String!): BlogIFollow
   }
 `;
 

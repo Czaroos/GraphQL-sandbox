@@ -18,7 +18,6 @@ const resolvers = {
       return null;
     },
   }),
- 
 };
 
 module.exports = resolvers;
