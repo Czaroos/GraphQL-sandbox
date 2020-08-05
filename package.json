@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Czaroos/GraphQL-sandbox#readme",
   "dependencies": {
     "apollo-server": "^2.16.1",
-    "graphql": "^15.3.0"
+    "graphql": "^15.3.0",
+    "jest": "^26.2.2"
   }
 }
