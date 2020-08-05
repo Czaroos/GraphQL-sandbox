@@ -13,10 +13,10 @@ const posts = [
     title: 'tytul2',
     text: 'tekst2',
     createdAt: Date.now,
-    comments: [],
+
   },
 ];
-const comment = [
+const comments = [
   {
     postId: 1,
     text: 'text',
@@ -40,7 +40,7 @@ const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
-    getPostComments: () => comment,
+    getPostComments: (_, { postId }) => comments.find((comment) => comment.postId == postId),
   },
 
   Date: new GraphQLScalarType({
