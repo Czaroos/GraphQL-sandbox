@@ -66,7 +66,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: (_W, { title, text, tags }) => {
+    createPost: (_, { title, text, tags }) => {
       const newPost = {
         id: 3,
         title,
@@ -79,19 +79,19 @@ const resolvers = {
       return newPost;
     },
 
-    createComment: (parent, args) => {
-      const createComment = {
-        postId: args.postId,
-        text: args.text,
+    createComment: (_, { postId, text }) => {
+      const newComment = {
+        postId,
+        text,
       };
-      return createComment;
+      return newComment;
     },
 
-    addTag: (parent, args) => {
-      const addTag = {
-        tag: args.tag,
+    addTag: (_, { tag }) => {
+      const newTag = {
+        tag,
       };
-      return addTag;
+      return newTag;
     },
   },
 
