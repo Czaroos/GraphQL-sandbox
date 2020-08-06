@@ -9,7 +9,7 @@ const typeDefs = gql`
     text: String!
     comments: [Comment]
     createdAt: Date!
-    tags: [Tag]
+    tags: [String]
   }
 
   type Comment {
@@ -25,10 +25,6 @@ const typeDefs = gql`
     role: Role!
   }
 
-  type Tag {
-    tag: String
-  }
-
   type BlogIFollow {
     url: String
   }
@@ -42,14 +38,12 @@ const typeDefs = gql`
     getPosts: [Post]
     getPostById(id: ID!): Post
     getPostComments(postId: ID!): [Comment]
-    getTags: [Tag]
     getBlogsIFollow: [BlogIFollow]
   }
 
   type Mutation {
     createPost(title: String!, text: String!, tags: [String]): Post
     createComment(postId: ID!, text: String!): Comment
-    addTag(tag: String!): Tag
   }
 `;
 

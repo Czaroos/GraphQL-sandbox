@@ -18,9 +18,7 @@ it('Create a post', async () => {
           text
         }
         createdAt
-        tags {
-          tag
-        }
+        tags
       }
     }
   `;
@@ -30,7 +28,7 @@ it('Create a post', async () => {
     variables: {
       title: 'testPost',
       text: 'This is a test post',
-      tags: ['test', 'post'],
+      tags: ['test', 'tag'],
     },
   });
 

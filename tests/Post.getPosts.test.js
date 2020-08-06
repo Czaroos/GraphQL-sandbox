@@ -18,9 +18,7 @@ it('Get all posts', async () => {
           text
         }
         createdAt
-        tags {
-          tag
-        }
+        tags
       }
     }
   `;

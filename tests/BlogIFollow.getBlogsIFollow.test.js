@@ -10,9 +10,8 @@ const { query } = createTestClient(server);
 it('Get all blogs i follow', async () => {
   const GET_BLOGS = gql`
     query GET_BLOGS {
-    getBlogsIFollow {
+      getBlogsIFollow {
         url
-        
       }
     }
   `;

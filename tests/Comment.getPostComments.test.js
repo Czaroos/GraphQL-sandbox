@@ -9,12 +9,12 @@ const { query } = createTestClient(server);
 it('Get comments by PostId', async () => {
   const GET_COMMENTS_BY_POSTID = gql`
     query GET_COMMENT_BY_POSTID($postId: ID = 1) {
-        getPostComments(postId: $postId) {
+      getPostComments(postId: $postId) {
         postId
         text
         createdAt
-        user{
-            name
+        user {
+          name
         }
       }
     }

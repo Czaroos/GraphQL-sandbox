@@ -18,9 +18,7 @@ it('Get one post by ID', async () => {
           text
         }
         createdAt
-        tags {
-          tag
-        }
+        tags
       }
     }
   `;

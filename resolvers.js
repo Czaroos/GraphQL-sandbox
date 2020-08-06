@@ -7,14 +7,17 @@ const posts = [
     title: 'tytul',
     text: 'tekst',
     createdAt: Date.now,
+    tags: ['tag1', 'tag2'],
   },
   {
     id: 2,
     title: 'tytul2',
     text: 'tekst2',
     createdAt: Date.now,
+    tags: ['tag2', 'tag3'],
   },
 ];
+
 const comments = [
   {
     postId: 1,
@@ -39,14 +42,7 @@ const comments = [
     user: [],
   },
 ];
-const tags = [
-  {
-    tag: 'WH40K',
-  },
-  {
-    tag: 'Necrons',
-  },
-];
+
 const blogs = [
   {
     url: 'https:/fdsfsdf',
@@ -55,13 +51,13 @@ const blogs = [
     url: 'https://aaaaaaaa.com',
   },
 ];
+
 const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
     getPostComments: (_, { postId }) =>
       comments.filter((comment) => comment.postId == postId),
-    getTags: () => tags,
     getBlogsIFollow: () => blogs,
   },
 
@@ -85,13 +81,6 @@ const resolvers = {
         text,
       };
       return newComment;
-    },
-
-    addTag: (_, { tag }) => {
-      const newTag = {
-        tag,
-      };
-      return newTag;
     },
   },
 
