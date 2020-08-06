@@ -78,12 +78,20 @@ const resolvers = {
 
       return newPost;
     },
-    createComment: (_, args) => {
+
+    createComment: (parent, args) => {
       const createComment = {
         postId: args.postId,
         text: args.text,
       };
       return createComment;
+    },
+
+    addTag: (parent, args) => {
+      const addTag = {
+        tag: args.tag,
+      };
+      return addTag;
     },
   },
 
