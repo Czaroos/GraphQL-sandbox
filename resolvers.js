@@ -65,7 +65,7 @@ const blogs = [
 ];
 
 const storeUpload = async ({ stream, filename, mimetype }) => {
-  const path = `images/${filename}`;
+  const path = `uploaded/${filename}`;
   // (createWriteStream) writes our file to the images directory
   return new Promise((resolve, reject) =>
     stream
@@ -103,18 +103,15 @@ const resolvers = {
         comments: [],
         tags,
         createdAt: Date.now(),
-        pictures,
       };
 
       return newPost;
     },
 
     uploadFile: async (_, { file }) => {
-      // Creates an images folder in the root directory
-      mkdir('images', { recursive: true }, (err) => {
+      mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
-      // Process upload
       const upload = await processUpload(file);
       return upload;
     },
