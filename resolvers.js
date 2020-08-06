@@ -8,6 +8,17 @@ const posts = [
     text: 'tekst',
     createdAt: Date.now,
     tags: ['tag1', 'tag2'],
+    comments: {
+      postId: 1,
+      text: 'text',
+      createdAt: Date.now,
+      user: {
+        name: 'String! ',
+        email: 'String!',
+        role: 'USER',
+      },
+    },
+    createdAt: Date.now,
   },
   {
     id: 2,
