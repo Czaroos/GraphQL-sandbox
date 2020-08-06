@@ -65,17 +65,24 @@ const resolvers = {
     getBlogsIFollow: () => blogs,
 
   },
-  //createPost(title: String!, text: String!, tags: [String]): Post
+
   Mutation: {
     createPost: (parent, args) => {
        const createPost = {
-        //id: 
+        id: args.id,// do poprawy
         title: args.title,
         text: args.text,
-        tags: args.tags,
+        tags: args.tags,// do poprawy
       }
      
       return createPost
+    },
+    createComment: (parent, args) => {
+      const createComment = {
+       postId: args.postId,
+       text: args.text,
+     }
+      return createComment
     }
   },
 
