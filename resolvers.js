@@ -63,7 +63,20 @@ const resolvers = {
     getPostComments: (_, { postId }) => comments.filter((comment) => comment.postId == postId),
     getTags: () => tags,
     getBlogsIFollow: () => blogs,
-    
+
+  },
+  //createPost(title: String!, text: String!, tags: [String]): Post
+  Mutation: {
+    createPost: (parent, args) => {
+       const createPost = {
+        //id: 
+        title: args.title,
+        text: args.text,
+        tags: args.tags,
+      }
+     
+      return createPost
+    }
   },
 
   Date: new GraphQLScalarType({
