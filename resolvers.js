@@ -13,7 +13,6 @@ const posts = [
     title: 'tytul2',
     text: 'tekst2',
     createdAt: Date.now,
-
   },
 ];
 const comments = [
@@ -24,8 +23,8 @@ const comments = [
     user: {
       name: 'String!',
       email: 'String!',
-      role: 'USER'  
-    }
+      role: 'USER',
+    },
   },
   {
     postId: 2,
@@ -33,7 +32,7 @@ const comments = [
     createdAt: Date.now,
     user: [],
   },
-    {
+  {
     postId: 1,
     text: 'text3',
     createdAt: Date.now,
@@ -41,49 +40,51 @@ const comments = [
   },
 ];
 const tags = [
-  {  
+  {
     tag: 'WH40K',
   },
   {
-   tag: 'Necrons'
+    tag: 'Necrons',
   },
 ];
 const blogs = [
-  {  
+  {
     url: 'https:/fdsfsdf',
   },
   {
-   url: 'https://aaaaaaaa.com'
+    url: 'https://aaaaaaaa.com',
   },
 ];
 const resolvers = {
   Query: {
     getPosts: () => posts,
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
-    getPostComments: (_, { postId }) => comments.filter((comment) => comment.postId == postId),
+    getPostComments: (_, { postId }) =>
+      comments.filter((comment) => comment.postId == postId),
     getTags: () => tags,
     getBlogsIFollow: () => blogs,
-
   },
 
   Mutation: {
-    createPost: (parent, args) => {
-       const createPost = {
-        id: args.id,// do poprawy
-        title: args.title,
-        text: args.text,
-        tags: args.tags,// do poprawy
-      }
-     
-      return createPost
+    createPost: (_W, { title, text, tags }) => {
+      const newPost = {
+        id: 3,
+        title,
+        text,
+        comments: [],
+        tags,
+        createdAt: Date.now(),
+      };
+
+      return newPost;
     },
-    createComment: (parent, args) => {
+    createComment: (_, args) => {
       const createComment = {
-       postId: args.postId,
-       text: args.text,
-     }
-      return createComment
-    }
+        postId: args.postId,
+        text: args.text,
+      };
+      return createComment;
+    },
   },
 
   Date: new GraphQLScalarType({

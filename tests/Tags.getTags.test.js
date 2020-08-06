@@ -12,7 +12,6 @@ it('Get all tags', async () => {
     query GET_TAGS {
       getTags {
         tag
-        
       }
     }
   `;

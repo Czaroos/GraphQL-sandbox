@@ -5,12 +5,12 @@ const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
 
 const server = new ApolloServer({ typeDefs, resolvers });
-const { query } = createTestClient(server);
+const { mutate } = createTestClient(server);
 
-it('Get one post by ID', async () => {
-  const GET_POST_BY_ID = gql`
-    query GET_POST_BY_ID($id: ID!) {
-      getPostById(id: $id) {
+it('Create a post', async () => {
+  const CREATE_POST = gql`
+    mutation CREATE_POST($title: String!, $text: String!, $tags: [String]) {
+      createPost(title: $title, text: $text, tags: $tags) {
         id
         title
         text
@@ -25,12 +25,14 @@ it('Get one post by ID', async () => {
     }
   `;
 
-  const result = await query({
-    query: GET_POST_BY_ID,
+  const result = await mutate({
+    mutation: CREATE_POST,
     variables: {
-      id: 1,
+      title: 'testPost',
+      text: 'This is a test post',
+      tags: ['test', 'post'],
     },
   });
 
-  expect(result.data.getPostById).toBeTruthy();
+  console.log(result);
 });
