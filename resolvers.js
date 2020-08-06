@@ -73,7 +73,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: (_, { title, text, tags }) => {
+    createPost: (_, { title, text, tags, pictures }) => {
       const newPost = {
         id: 3,
         title,
@@ -81,6 +81,7 @@ const resolvers = {
         comments: [],
         tags,
         createdAt: Date.now(),
+        pictures,
       };
 
       return newPost;
