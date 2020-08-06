@@ -1,5 +1,6 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
+const { createWriteStream, mkdir } = require('fs');
 
 const posts = [
   {
@@ -63,6 +64,24 @@ const blogs = [
   },
 ];
 
+const storeUpload = async ({ stream, filename, mimetype }) => {
+  const path = `images/${filename}`;
+  // (createWriteStream) writes our file to the images directory
+  return new Promise((resolve, reject) =>
+    stream
+      .pipe(createWriteStream(path))
+      .on('finish', () => resolve({ path, filename, mimetype }))
+      .on('error', reject)
+  );
+};
+
+const processUpload = async (upload) => {
+  const { createReadStream, filename, mimetype } = await upload;
+  const stream = createReadStream();
+  const file = await storeUpload({ stream, filename, mimetype });
+  return file;
+};
+
 const resolvers = {
   Query: {
     getPosts: () => posts,
@@ -70,6 +89,9 @@ const resolvers = {
     getPostComments: (_, { postId }) =>
       comments.filter((comment) => comment.postId == postId),
     getBlogsIFollow: () => blogs,
+    files: () => {
+      // Return the record of files uploaded from your DB or API or filesystem.
+    },
   },
 
   Mutation: {
@@ -85,6 +107,16 @@ const resolvers = {
       };
 
       return newPost;
+    },
+
+    uploadFile: async (_, { file }) => {
+      // Creates an images folder in the root directory
+      mkdir('images', { recursive: true }, (err) => {
+        if (err) throw err;
+      });
+      // Process upload
+      const upload = await processUpload(file);
+      return upload;
     },
 
     createComment: (_, { postId, text }) => {
