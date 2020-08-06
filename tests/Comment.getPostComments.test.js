@@ -13,6 +13,9 @@ it('Get comments by PostId', async () => {
         postId
         text
         createdAt
+        user{
+            name
+        }
       }
     }
   `;
