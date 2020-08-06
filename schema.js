@@ -34,16 +34,24 @@ const typeDefs = gql`
     ADMIN
   }
 
+  type File {
+    filename: String!
+    mimetype: String!
+    path: String!
+  }
+
   type Query {
     getPosts: [Post]
     getPostById(id: ID!): Post
     getPostComments(postId: ID!): [Comment]
     getBlogsIFollow: [BlogIFollow]
+    files: [File!]
   }
 
   type Mutation {
     createPost(title: String!, text: String!, tags: [String]): Post
     createComment(postId: ID!, text: String!): Comment
+    uploadFile(file: Upload!): File!
   }
 `;
 
