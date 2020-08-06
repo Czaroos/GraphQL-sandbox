@@ -10,7 +10,6 @@ const typeDefs = gql`
     comments: [Comment]
     createdAt: Date!
     tags: [String]
-    pictures: Picture
   }
 
   type Comment {
@@ -19,11 +18,7 @@ const typeDefs = gql`
     createdAt: Date!
     user: User!
   }
-  type Picture {
-    filename: String!
-    mimetype: String!
-    encoding: String!
-  }
+
   type User {
     name: String!
     email: String!
@@ -54,12 +49,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createPost(
-      title: String!
-      text: String!
-      tags: [String]
-      pictures: Upload!
-    ): Post
+    createPost(title: String!, text: String!, tags: [String]): Post
     createComment(postId: ID!, text: String!): Comment
     uploadFile(file: Upload!): File!
   }
