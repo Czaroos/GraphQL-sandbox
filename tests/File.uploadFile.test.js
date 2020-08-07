@@ -39,4 +39,10 @@ it('Upload a file', async () => {
   expect(path).toBe('uploaded/t1.png');
   expect(filename).toBe('t1.png');
   expect(mimetype).toBe('image/png');
+
+  const fileExists = await fs.promises
+    .access(path)
+    .then(() => true)
+    .catch(() => false);
+  expect(fileExists).toBe(true);
 });
