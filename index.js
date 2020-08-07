@@ -6,8 +6,13 @@ const db = require('./databaseConnection');
 const server = new ApolloServer({ typeDefs, resolvers });
 
 server.listen().then(({ url }) => {
-  db.connect();
-  console.log(`🚀  Database ready.`);
   console.log(`🚀  Server ready at ${url}`);
-  db.end();
+});
+
+db.connect((err) => {
+  if (err) {
+    console.error('DB connection error', err.stack);
+  } else {
+    console.log(`🚀  Database ready.`);
+  }
 });
