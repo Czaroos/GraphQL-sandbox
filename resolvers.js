@@ -66,7 +66,6 @@ const blogs = [
 
 const storeUpload = async ({ stream, filename, mimetype }) => {
   const path = `uploaded/${filename}`;
-  // (createWriteStream) writes our file to the images directory
   return new Promise((resolve, reject) =>
     stream
       .pipe(createWriteStream(path))
@@ -95,7 +94,7 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: (_, { title, text, tags, pictures }) => {
+    createPost: (_, { title, text, tags }) => {
       const newPost = {
         id: 3,
         title,
