@@ -1,7 +1,10 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const { createWriteStream, mkdir } = require('fs');
+const { createWriteStream, mkdir, readdirSync } = require('fs');
 const client = require('./databaseConnection');
+const path = require('path');
+const uploadedDirPath = path.join(__dirname, 'uploaded');
+const mime = require('mime');
 
 const blogs = [
   {
@@ -65,7 +68,17 @@ const resolvers = {
         console.log(err);
       }
     },
-    files: () => {},
+    files: async () => {
+      const files = await readdirSync(uploadedDirPath);
+
+      return files.map((file) => {
+        return {
+          filename: file,
+          mimetype: mime.getType(file),
+          path: `uploaded/${file}`,
+        };
+      });
+    },
   },
 
   Mutation: {
