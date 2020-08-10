@@ -3,59 +3,6 @@ const { Kind } = require('graphql/language');
 const { createWriteStream, mkdir } = require('fs');
 const client = require('./databaseConnection');
 
-const posts = [
-  {
-    id: 1,
-    title: 'tytul',
-    text: 'tekst',
-    createdAt: Date.now,
-    tags: ['tag1', 'tag2'],
-    comments: {
-      postId: 1,
-      text: 'text',
-      createdAt: Date.now,
-      user: {
-        name: 'String! ',
-        email: 'String!',
-        role: 'USER',
-      },
-    },
-    createdAt: Date.now,
-  },
-  {
-    id: 2,
-    title: 'tytul2',
-    text: 'tekst2',
-    createdAt: Date.now,
-    tags: ['tag2', 'tag3'],
-  },
-];
-
-const comments = [
-  {
-    postId: 1,
-    text: 'text',
-    createdAt: Date.now,
-    user: {
-      name: 'String!',
-      email: 'String!',
-      role: 'USER',
-    },
-  },
-  {
-    postId: 2,
-    text: 'text2',
-    createdAt: Date.now,
-    user: [],
-  },
-  {
-    postId: 1,
-    text: 'text3',
-    createdAt: Date.now,
-    user: [],
-  },
-];
-
 const blogs = [
   {
     url: 'https:/fdsfsdf',
@@ -85,20 +32,40 @@ const processUpload = async (upload) => {
 const resolvers = {
   Query: {
     getPosts: async () => {
-      const res = await client
-        .query('select * from "Post"')
-        .then((res) => res.rows)
-        .catch((err) => console.log(err));
-
-      return res;
+      try {
+        const res = await client.query('SELECT * FROM "Post"');
+        return res.rows;
+      } catch (err) {
+        console.log(err);
+      }
     },
-    getPostById: (_, { id }) => posts.find((post) => post.id == id),
-    getPostComments: (_, { postId }) =>
-      comments.filter((comment) => comment.postId == postId),
-    getBlogsIFollow: () => blogs,
-    files: () => {
-      // Return the record of files uploaded from your DB or API or filesystem.
+    getPostById: async (_, { id }) => {
+      try {
+        const res = await client.query(`SELECT * FROM "Post" WHERE id=${id}`);
+        return res.rows[0];
+      } catch (err) {
+        console.log(err);
+      }
     },
+    getPostComments: async (_, { postId }) => {
+      try {
+        const res = await client.query(
+          `SELECT * FROM "Comment" WHERE "postId"=${postId}`
+        );
+        return res.rows;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    getBlogsIFollow: async () => {
+      try {
+        const res = await client.query(`SELECT * FROM "BlogIFollow"`);
+        return res.rows;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    files: () => {},
   },
 
   Mutation: {
