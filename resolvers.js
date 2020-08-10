@@ -18,10 +18,10 @@ const storeUpload = async ({ stream, filename, mimetype }) => {
   );
 };
 
-const setQuery = async (queryString) => {
+const setQuery = async (queryString, values) => {
   client.connect();
   try {
-    const res = await client.query(queryString);
+    const res = await client.query(queryString, values);
     client.end();
     return res.rows;
   } catch (err) {
@@ -44,30 +44,18 @@ const resolvers = {
       return res;
     },
     getPostById: async (_, { id }) => {
-      try {
-        const res = await client.query(`SELECT * FROM "Post" WHERE id=${id}`);
-        return res.rows[0];
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await setQuery(`SELECT * FROM "Post" WHERE id=${id}`);
+      return res[0];
     },
     getPostComments: async (_, { postId }) => {
-      try {
-        const res = await client.query(
-          `SELECT * FROM "Comment" WHERE "postId"=${postId}`
-        );
-        return res.rows;
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await setQuery(
+        `SELECT * FROM "Comment" WHERE "postId"=${postId}`
+      );
+      return res;
     },
     getBlogsIFollow: async () => {
-      try {
-        const res = await client.query(`SELECT * FROM "BlogIFollow"`);
-        return res.rows;
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await setQuery(`SELECT * FROM "BlogIFollow"`);
+      return res;
     },
     files: async () => {
       const files = await readdirSync(uploadedDirPath);
@@ -87,15 +75,12 @@ const resolvers = {
       const createdAt = new Date();
       const values = [title, text, tags, createdAt];
 
-      const test =
-        'INSERT INTO "Post"(title, text, tags, createdAt) VALUES ($1, $2, $3, $4)RETURNING *';
-      try {
-        const res = await client.query(test, values);
-        console.log(res.rows);
-        return res.rows;
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await setQuery(
+        'INSERT INTO "Post" (title, text, tags, "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
+        values
+      );
+      console.log(res[0]);
+      return res[0];
     },
 
     uploadFile: async (_, { file }) => {

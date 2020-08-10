@@ -31,7 +31,7 @@ it('Create a post', async () => {
       tags: ['test', 'tag'],
     },
   });
-
+  console.log(result);
   const { title, text } = result.data.createPost;
   expect(title.trim() && text.trim()).not.toBe('');
   expect(result.data.createPost).toBeTruthy;

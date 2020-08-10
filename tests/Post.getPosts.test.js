@@ -27,8 +27,8 @@ it('Get all posts', async () => {
     query: GET_POSTS,
   });
 
-  expect(result.data.getPosts.length).toEqual(2);
   expect(result.data.getPosts).toBeTruthy;
-  expect(result.data.getPosts[0]).toBeTruthy;
-  expect(result.data.getPosts[1]).toBeTruthy;
+  result.data.getPosts.forEach((post) => {
+    expect(post).toBeTruthy;
+  });
 });
