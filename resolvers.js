@@ -1,7 +1,17 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { createWriteStream, mkdir } = require('fs');
-
+const db = require('./databaseConnection');
+const knex = require('knex')({
+  client: 'pg',
+  conenction: {
+    host: '192.168.1.49',
+    user: 'postgresuser',
+    database: 'graphql_sandbox',
+    password: 'postgresuser',
+    port: '5432',
+  },
+});
 const posts = [
   {
     id: 1,
@@ -83,7 +93,7 @@ const processUpload = async (upload) => {
 
 const resolvers = {
   Query: {
-    getPosts: () => posts,
+    getPosts: () => knex('Post').select('*'),
     getPostById: (_, { id }) => posts.find((post) => post.id == id),
     getPostComments: (_, { postId }) =>
       comments.filter((comment) => comment.postId == postId),
