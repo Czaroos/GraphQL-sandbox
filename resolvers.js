@@ -105,12 +105,19 @@ const resolvers = {
       return upload;
     },
 
-    createComment: (_, { postId, text }) => {
-      const newComment = {
-        postId,
-        text,
-      };
-      return newComment;
+    createComment: async (_, { postId, text, user }) => {
+      const createdat = new Date();
+      const values = [postId, text, user, createdat];
+
+      const test =
+        'INSERT INTO "Comment"("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4)RETURNING *';
+      try {
+        const res = await client.query(test, values);
+        console.log(res.rows);
+        return res.rows;
+      } catch (err) {
+        console.log(err);
+      }
     },
   },
 
