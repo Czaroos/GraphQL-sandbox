@@ -5,15 +5,8 @@ const client = require('./databaseConnection');
 const path = require('path');
 const uploadedDirPath = path.join(__dirname, 'uploaded');
 const mime = require('mime');
-
-const blogs = [
-  {
-    url: 'https:/fdsfsdf',
-  },
-  {
-    url: 'https://aaaaaaaa.com',
-  },
-];
+const { Pool } = require('pg');
+const pool = new Pool();
 
 const storeUpload = async ({ stream, filename, mimetype }) => {
   const path = `uploaded/${filename}`;
@@ -23,6 +16,18 @@ const storeUpload = async ({ stream, filename, mimetype }) => {
       .on('finish', () => resolve({ path, filename, mimetype }))
       .on('error', reject)
   );
+};
+
+const setQuery = async (queryString) => {
+  client.connect();
+  try {
+    const res = await client.query(queryString);
+    client.end();
+    return res.rows;
+  } catch (err) {
+    client.end();
+    console.log(err);
+  }
 };
 
 const processUpload = async (upload) => {
@@ -35,12 +40,8 @@ const processUpload = async (upload) => {
 const resolvers = {
   Query: {
     getPosts: async () => {
-      try {
-        const res = await client.query('SELECT * FROM "Post"');
-        return res.rows;
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await setQuery('SELECT * FROM "Post"');
+      return res;
     },
     getPostById: async (_, { id }) => {
       try {

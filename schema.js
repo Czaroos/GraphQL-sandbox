@@ -8,7 +8,7 @@ const typeDefs = gql`
     title: String!
     text: String!
     comments: [Comment]
-    createdAt: Date!
+    createdAt: Date
     tags: [String]
   }
 
