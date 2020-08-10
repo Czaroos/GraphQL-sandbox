@@ -1,12 +1,10 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { createWriteStream, mkdir, readdirSync } = require('fs');
-const client = require('./databaseConnection');
+const { client, pool } = require('./databaseConnection');
 const path = require('path');
 const uploadedDirPath = path.join(__dirname, 'uploaded');
 const mime = require('mime');
-const { Pool } = require('pg');
-const pool = new Pool();
 
 const storeUpload = async ({ stream, filename, mimetype }) => {
   const path = `uploaded/${filename}`;
@@ -19,15 +17,20 @@ const storeUpload = async ({ stream, filename, mimetype }) => {
 };
 
 const setQuery = async (queryString, values) => {
-  client.connect();
-  try {
-    const res = await client.query(queryString, values);
-    client.end();
-    return res.rows;
-  } catch (err) {
-    client.end();
-    console.log(err);
-  }
+  const res = await pool.connect().then((client) => {
+    return client
+      .query(queryString, values)
+      .then((res) => {
+        client.release();
+        return res;
+      })
+      .catch((err) => {
+        client.release();
+        console.log(err);
+      });
+  });
+  console.log(res.rows);
+  return res.rows;
 };
 
 const processUpload = async (upload) => {
