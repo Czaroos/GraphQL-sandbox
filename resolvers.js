@@ -82,17 +82,19 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: (_, { title, text, tags }) => {
-      const newPost = {
-        id: 3,
-        title,
-        text,
-        comments: [],
-        tags,
-        createdAt: Date.now(),
-      };
+    createPost: async (_, { title, text, tags }) => {
+      const createdAt = new Date();
+      const values = [title, text, tags, createdAt];
 
-      return newPost;
+      const test =
+        'INSERT INTO "Post"(title, text, tags, createdAt) VALUES ($1, $2, $3, $4)RETURNING *';
+      try {
+        const res = await client.query(test, values);
+        console.log(res.rows);
+        return res.rows;
+      } catch (err) {
+        console.log(err);
+      }
     },
 
     uploadFile: async (_, { file }) => {
