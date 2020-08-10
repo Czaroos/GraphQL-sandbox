@@ -2,16 +2,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { createWriteStream, mkdir } = require('fs');
 const client = require('./databaseConnection');
-const knex = require('knex')({
-  client: 'pg',
-  conenction: {
-    host: '192.168.1.49',
-    user: 'postgresuser',
-    database: 'graphql_sandbox',
-    password: 'postgresuser',
-    port: '5432',
-  },
-});
+
 const posts = [
   {
     id: 1,
