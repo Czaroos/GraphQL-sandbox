@@ -10,6 +10,7 @@ const typeDefs = gql`
     comments: [Comment]
     createdAt: Date
     tags: [String]
+    imageurl: String
   }
 
   type Comment {
@@ -54,6 +55,7 @@ const typeDefs = gql`
       text: String!
       tags: [String]
       isTesting: Boolean
+      imageurl: String
     ): Post
     createComment(
       postId: ID!

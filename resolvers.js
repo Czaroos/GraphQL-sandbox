@@ -96,12 +96,15 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: async (_, { title, text, tags, isTesting = false }) => {
+    createPost: async (
+      _,
+      { title, text, tags, isTesting = false, imageurl }
+    ) => {
       const createdAt = new Date();
-      const values = [title, text, tags, createdAt];
+      const values = [title, text, tags, createdAt, imageurl];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, tags, "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO "Post" (title, text, tags, "createdAt", imageurl) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         values,
         isTesting
       );
