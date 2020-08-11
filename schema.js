@@ -10,7 +10,6 @@ const typeDefs = gql`
     comments: [Comment]
     createdAt: Date
     tags: [String]
-    imageurl: String
   }
 
   type Comment {
@@ -39,6 +38,7 @@ const typeDefs = gql`
     filename: String!
     mimetype: String!
     path: String!
+    PostId: Int!
   }
 
   type Query {
@@ -55,7 +55,6 @@ const typeDefs = gql`
       text: String!
       tags: [String]
       isTesting: Boolean
-      imageurl: String
     ): Post
     createComment(
       postId: ID!
@@ -63,7 +62,7 @@ const typeDefs = gql`
       user: String!
       isTesting: Boolean
     ): Comment
-    uploadFile(file: Upload!): File!
+    uploadFile(file: Upload!, PostId: Int!): File!
   }
 `;
 

@@ -6,16 +6,6 @@ const path = require('path');
 const uploadedDirPath = path.join(__dirname, 'uploaded');
 const mime = require('mime');
 
-const storeUpload = async ({ stream, filename, mimetype }) => {
-  const path = `uploaded/${filename}`;
-  return new Promise((resolve, reject) =>
-    stream
-      .pipe(createWriteStream(path))
-      .on('finish', () => resolve({ path, filename, mimetype }))
-      .on('error', reject)
-  );
-};
-
 const setQuery = async (queryString, values) => {
   const res = await pool.connect().then((client) => {
     return client
@@ -58,10 +48,20 @@ const setTransaction = async (queryString, values, isTesting) => {
 const processUpload = async (upload) => {
   const { createReadStream, filename, mimetype } = await upload;
   const stream = createReadStream();
+
   const file = await storeUpload({ stream, filename, mimetype });
   return file;
 };
 
+const storeUpload = async ({ stream, filename, mimetype }) => {
+  const path = `uploaded/${filename}`;
+  return new Promise((resolve, reject) =>
+    stream
+      .pipe(createWriteStream(path))
+      .on('finish', () => resolve({ path, filename, mimetype }))
+      .on('error', reject)
+  );
+};
 const resolvers = {
   Query: {
     getPosts: async () => {
@@ -84,7 +84,6 @@ const resolvers = {
     },
     files: async () => {
       const files = await readdirSync(uploadedDirPath);
-
       return files.map((file) => {
         return {
           filename: file,
@@ -112,12 +111,18 @@ const resolvers = {
       return res[0];
     },
 
-    uploadFile: async (_, { file }) => {
+    uploadFile: async (_, { file, PostId }) => {
       mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
+      const values = [PostId];
+      const res = await setQuery(
+        'INSERT INTO "Image"("PostId") VALUES ($1)RETURNING *',
+        values
+      );
+
       const upload = await processUpload(file);
-      return upload;
+      return upload, res[0];
     },
 
     createComment: async (_, { postId, text, user, isTesting = false }) => {
