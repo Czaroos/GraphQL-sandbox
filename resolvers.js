@@ -111,13 +111,17 @@ const resolvers = {
       return res[0];
     },
 
-    uploadFile: async (_, { file, PostId }) => {
+    uploadFile: async (_, { file, PostId, filename }) => {
       mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
-      const values = [PostId];
+      await file.then((file) => (filename = file.filename));
+      // const path = await filename;
+      const url = `uploaded/${filename}`;
+      const values = [PostId, url];
+      console.log(file, filename);
       const res = await setQuery(
-        'INSERT INTO "Image"("PostId") VALUES ($1)RETURNING *',
+        'INSERT INTO "Image"("PostId", "url") VALUES ($1,$2)RETURNING *',
         values
       );
 
