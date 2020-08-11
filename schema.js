@@ -16,7 +16,7 @@ const typeDefs = gql`
     postId: ID!
     text: String!
     createdAt: Date!
-    user: User!
+    user: String!
   }
 
   type User {
