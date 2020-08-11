@@ -55,7 +55,12 @@ const typeDefs = gql`
       tags: [String]
       isTesting: Boolean
     ): Post
-    createComment(postId: ID!, text: String!, user: String!): Comment
+    createComment(
+      postId: ID!
+      text: String!
+      user: String!
+      isTesting: Boolean
+    ): Comment
     uploadFile(file: Upload!): File!
   }
 `;

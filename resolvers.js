@@ -117,19 +117,16 @@ const resolvers = {
       return upload;
     },
 
-    createComment: async (_, { postId, text, user }) => {
+    createComment: async (_, { postId, text, user, isTesting = false }) => {
       const createdat = new Date();
       const values = [postId, text, user, createdat];
 
-      const test =
-        'INSERT INTO "Comment"("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4)RETURNING *';
-      try {
-        const res = await pool.query(test, values);
-        console.log(res.rows);
-        return res.rows;
-      } catch (err) {
-        console.log(err);
-      }
+      const test = await setTransaction(
+        'INSERT INTO "Comment"("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4)RETURNING *',
+        values,
+        isTesting
+      );
+      return test[0];
     },
   },
 

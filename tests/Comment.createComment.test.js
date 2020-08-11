@@ -9,11 +9,20 @@ const { mutate } = createTestClient(server);
 
 it('Create a comment', async () => {
   const CREATE_COMMENT = gql`
-    mutation CREATE_COMMENT($postId: ID!, $text: String!, $user: String!) {
-      createComment(postId: $postId, text: $text, user: $user) {
+    mutation CREATE_COMMENT(
+      $postId: ID!
+      $text: String!
+      $user: String!
+      $isTesting: Boolean
+    ) {
+      createComment(
+        postId: $postId
+        text: $text
+        user: $user
+        isTesting: $isTesting
+      ) {
         postId
         text
-        createdAt
         user
       }
     }
@@ -25,8 +34,8 @@ it('Create a comment', async () => {
       postId: 1,
       text: 'text test',
       user: 'test user',
+      isTesting: true,
     },
   });
-
   expect(result.data.createComment).toBeTruthy;
 });
