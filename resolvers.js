@@ -101,7 +101,7 @@ const resolvers = {
       const test =
         'INSERT INTO "Comment"("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4)RETURNING *';
       try {
-        const res = await client.query(test, values);
+        const res = await pool.query(test, values);
         console.log(res.rows);
         return res.rows;
       } catch (err) {
