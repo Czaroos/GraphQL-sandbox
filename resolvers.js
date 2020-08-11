@@ -33,6 +33,28 @@ const setQuery = async (queryString, values) => {
   return res.rows;
 };
 
+const setTransaction = async (queryString, values, isTesting) => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const res = await client.query(queryString, values);
+
+    if (isTesting) {
+      await client.query('ROLLBACK');
+      console.log('test passed');
+      return res.rows;
+    } else {
+      await client.query('COMMIT');
+      return res.rows;
+    }
+  } catch (e) {
+    await client.query('ROLLBACK');
+    throw e;
+  } finally {
+    client.release();
+  }
+};
+
 const processUpload = async (upload) => {
   const { createReadStream, filename, mimetype } = await upload;
   const stream = createReadStream();
@@ -74,13 +96,14 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: async (_, { title, text, tags }) => {
+    createPost: async (_, { title, text, tags, isTesting = false }) => {
       const createdAt = new Date();
       const values = [title, text, tags, createdAt];
 
-      const res = await setQuery(
+      const res = await setTransaction(
         'INSERT INTO "Post" (title, text, tags, "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
-        values
+        values,
+        isTesting
       );
       console.log(res[0]);
       return res[0];

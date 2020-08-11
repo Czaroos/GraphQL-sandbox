@@ -49,7 +49,12 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    createPost(title: String!, text: String!, tags: [String]): Post
+    createPost(
+      title: String!
+      text: String!
+      tags: [String]
+      isTesting: Boolean
+    ): Post
     createComment(postId: ID!, text: String!, user: String!): Comment
     uploadFile(file: Upload!): File!
   }
