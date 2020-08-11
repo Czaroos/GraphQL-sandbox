@@ -38,7 +38,8 @@ const typeDefs = gql`
     filename: String!
     mimetype: String!
     path: String!
-    PostId: Int!
+    PostId: ID!
+    url: String!
   }
 
   type Query {

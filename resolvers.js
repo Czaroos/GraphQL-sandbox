@@ -95,15 +95,12 @@ const resolvers = {
   },
 
   Mutation: {
-    createPost: async (
-      _,
-      { title, text, tags, isTesting = false, imageurl }
-    ) => {
+    createPost: async (_, { title, text, tags, isTesting = false }) => {
       const createdAt = new Date();
-      const values = [title, text, tags, createdAt, imageurl];
+      const values = [title, text, tags, createdAt];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, tags, "createdAt", imageurl) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        'INSERT INTO "Post" (title, text, tags, "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
@@ -111,20 +108,17 @@ const resolvers = {
       return res[0];
     },
 
-    uploadFile: async (_, { file, PostId, filename }) => {
+    uploadFile: async (_, { file, PostId }) => {
       mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
       await file.then((file) => (filename = file.filename));
-      // const path = await filename;
       const url = `uploaded/${filename}`;
       const values = [PostId, url];
-      console.log(file, filename);
       const res = await setQuery(
         'INSERT INTO "Image"("PostId", "url") VALUES ($1,$2)RETURNING *',
         values
       );
-
       const upload = await processUpload(file);
       return upload, res[0];
     },
