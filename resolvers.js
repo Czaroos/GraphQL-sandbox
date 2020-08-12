@@ -30,7 +30,7 @@ const resolvers = {
   Mutation: {
     createPost: async (
       _,
-      { title, text, tags, isTesting = false },
+      { title, text, tags, userId, isTesting = false },
       { user }
     ) => {
       if (!user)
@@ -38,10 +38,10 @@ const resolvers = {
           'You must be logged in to perform createPost action!'
         );
       const createdAt = new Date();
-      const values = [title, text, tags, createdAt];
+      const values = [title, text, tags, userId, createdAt];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, tags, "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO "Post" (title, text, tags, "createdAt", userId) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         values,
         isTesting
       );
