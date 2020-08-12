@@ -1,66 +1,8 @@
 const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
-const { createWriteStream, mkdir, readdirSync } = require('fs');
-const { client, pool } = require('./databaseConnection');
-const path = require('path');
-const uploadedDirPath = path.join(__dirname, 'uploaded');
-const mime = require('mime');
+const { setQuery, setTransaction } = require('./utils/queries');
+const { getFiles, uploadFile } = require('./utils/upload');
 
-const setQuery = async (queryString, values) => {
-  const res = await pool.connect().then((client) => {
-    return client
-      .query(queryString, values)
-      .then((res) => {
-        client.release();
-        return res;
-      })
-      .catch((err) => {
-        client.release();
-        console.log(err);
-      });
-  });
-  return res.rows;
-};
-
-const setTransaction = async (queryString, values, isTesting) => {
-  const client = await pool.connect();
-  try {
-    await client.query('BEGIN');
-    const res = await client.query(queryString, values);
-
-    if (isTesting) {
-      await client.query('ROLLBACK');
-      console.log('test passed');
-      return res.rows;
-    } else {
-      await client.query('COMMIT');
-      return res.rows;
-    }
-  } catch (e) {
-    await client.query('ROLLBACK');
-    throw e;
-  } finally {
-    client.release();
-  }
-};
-
-const processUpload = async (upload) => {
-  const { createReadStream, filename, mimetype } = await upload;
-  const stream = createReadStream();
-
-  const file = await storeUpload({ stream, filename, mimetype });
-  return file;
-};
-
-const storeUpload = async ({ stream, filename, mimetype }) => {
-  const path = `uploaded/${filename}`;
-  return new Promise((resolve, reject) =>
-    stream
-      .pipe(createWriteStream(path))
-      .on('finish', () => resolve({ path, filename, mimetype }))
-      .on('error', reject)
-  );
-};
 const resolvers = {
   Query: {
     getPosts: async () => {
@@ -81,20 +23,17 @@ const resolvers = {
       const res = await setQuery(`SELECT * FROM "BlogIFollow"`);
       return res;
     },
-    files: async () => {
-      const files = await readdirSync(uploadedDirPath);
-      return files.map((file) => {
-        return {
-          filename: file,
-          mimetype: mime.getType(file),
-          path: `uploaded/${file}`,
-        };
-      });
-    },
+    files: async () => await getFiles(),
   },
 
   Mutation: {
-    createPost: async (_, { title, text, tags, isTesting = false }) => {
+    createPost: async (
+      _,
+      { title, text, tags, isTesting = false },
+      { user }
+    ) => {
+      if (!user)
+        return new Error('You must be logged in to perform createPost action!');
       const createdAt = new Date();
       const values = [title, text, tags, createdAt];
 
@@ -106,19 +45,8 @@ const resolvers = {
       return res[0];
     },
 
-    uploadFile: async (_, { file, postId, isTesting = false }) => {
-      mkdir('uploaded', { recursive: true }, (err) => {
-        if (err) throw err;
-      });
-      const upload = await processUpload(file);
-      const values = [postId, upload.path];
-      await setTransaction(
-        'INSERT INTO "Image" ("PostId", "url") VALUES ($1,$2) RETURNING *',
-        values,
-        isTesting
-      );
-      return { ...upload, postId };
-    },
+    uploadFile: async (_, { file, postId, isTesting = false }) =>
+      await uploadFile(_, { file, postId, isTesting }),
 
     createComment: async (_, { postId, text, user, isTesting = false }) => {
       const createdat = new Date();
