@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Czaroos/GraphQL-sandbox#readme",
   "dependencies": {
     "apollo-server": "^2.16.1",
+    "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
     "jest": "^26.2.2",

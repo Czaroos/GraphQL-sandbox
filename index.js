@@ -2,15 +2,16 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const { client } = require('./databaseConnection');
-const User = require('./models/User');
+const { getUser } = require('./models/User');
 
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
     const token = req.headers.authorization || '';
-    const user = User.getUser(token);
-    return { user };
+    const body = req.body;
+    // const user = getUser(token) || null;
+    return { user, body };
   },
 });
 
