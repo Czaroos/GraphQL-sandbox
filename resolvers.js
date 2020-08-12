@@ -34,15 +34,16 @@ const resolvers = {
       { title, text, tags, userId, isTesting = false },
       { user }
     ) => {
+      console.log(user);
       if (!user)
         return new AuthenticationError(
           'You must be logged in to perform createPost action!'
         );
       const createdAt = new Date();
-      const values = [title, text, tags, userId, createdAt];
+      const values = [title, text, tags, createdAt, userId];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, tags, "createdAt", userId) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        'INSERT INTO "Post" (title, text, tags, "createdAt", "userId") VALUES ($1, $2, $3, $4, $5) RETURNING *',
         values,
         isTesting
       );
