@@ -10,6 +10,7 @@ const typeDefs = gql`
     comments: [Comment]
     createdAt: Date
     tags: [String]
+    userId: Int!
   }
 
   type Comment {
@@ -22,16 +23,13 @@ const typeDefs = gql`
   type User {
     name: String!
     email: String!
-    role: Role!
+    password: String!
+    userId: ID!
+    token: String!
   }
 
   type BlogIFollow {
     url: String
-  }
-
-  enum Role {
-    USER
-    ADMIN
   }
 
   type File {
@@ -54,6 +52,7 @@ const typeDefs = gql`
       title: String!
       text: String!
       tags: [String]
+      userId: Int!
       isTesting: Boolean
     ): Post
     createComment(
