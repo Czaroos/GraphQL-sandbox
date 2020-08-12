@@ -19,7 +19,6 @@ const setQuery = async (queryString, values) => {
         console.log(err);
       });
   });
-  console.log(res.rows);
   return res.rows;
 };
 
@@ -104,23 +103,20 @@ const resolvers = {
         values,
         isTesting
       );
-      console.log(res[0]);
       return res[0];
     },
 
-    uploadFile: async (_, { file, PostId }) => {
+    uploadFile: async (_, { file, postId }) => {
       mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
-      await file.then((file) => (filename = file.filename));
-      const url = `uploaded/${filename}`;
-      const values = [PostId, url];
-      const res = await setQuery(
+      const upload = await processUpload(file);
+      const values = [postId, upload.path];
+      await setQuery(
         'INSERT INTO "Image"("PostId", "url") VALUES ($1,$2)RETURNING *',
         values
       );
-      const upload = await processUpload(file);
-      return upload, res[0];
+      return { ...upload, postId };
     },
 
     createComment: async (_, { postId, text, user, isTesting = false }) => {

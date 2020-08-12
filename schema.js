@@ -38,8 +38,7 @@ const typeDefs = gql`
     filename: String!
     mimetype: String!
     path: String!
-    PostId: ID!
-    url: String!
+    postId: ID!
   }
 
   type Query {
@@ -63,7 +62,7 @@ const typeDefs = gql`
       user: String!
       isTesting: Boolean
     ): Comment
-    uploadFile(file: Upload!, PostId: Int!): File!
+    uploadFile(file: Upload!, postId: ID!): File!
   }
 `;
 
