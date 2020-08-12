@@ -62,7 +62,7 @@ const typeDefs = gql`
       user: String!
       isTesting: Boolean
     ): Comment
-    uploadFile(file: Upload!, postId: ID!): File!
+    uploadFile(file: Upload!, postId: ID!, isTesting: Boolean): File!
   }
 `;
 

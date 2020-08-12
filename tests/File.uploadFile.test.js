@@ -11,8 +11,8 @@ const { mutate } = createTestClient(server);
 
 it('Upload a file', async () => {
   const UPLOAD_FILE = gql`
-    mutation UPLOAD_FILE($file: Upload!, $postId: ID!) {
-      uploadFile(file: $file, postId: $postId) {
+    mutation UPLOAD_FILE($file: Upload!, $postId: ID!, $isTesting: Boolean) {
+      uploadFile(file: $file, postId: $postId, isTesting: $isTesting) {
         filename
         mimetype
         path
@@ -33,6 +33,7 @@ it('Upload a file', async () => {
         });
       }),
       postId: 1,
+      isTesting: true,
     },
   });
 

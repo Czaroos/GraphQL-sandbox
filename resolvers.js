@@ -106,15 +106,16 @@ const resolvers = {
       return res[0];
     },
 
-    uploadFile: async (_, { file, postId }) => {
+    uploadFile: async (_, { file, postId, isTesting = false }) => {
       mkdir('uploaded', { recursive: true }, (err) => {
         if (err) throw err;
       });
       const upload = await processUpload(file);
       const values = [postId, upload.path];
-      await setQuery(
-        'INSERT INTO "Image"("PostId", "url") VALUES ($1,$2)RETURNING *',
-        values
+      await setTransaction(
+        'INSERT INTO "Image" ("PostId", "url") VALUES ($1,$2) RETURNING *',
+        values,
+        isTesting
       );
       return { ...upload, postId };
     },
@@ -124,7 +125,7 @@ const resolvers = {
       const values = [postId, text, user, createdat];
 
       const test = await setTransaction(
-        'INSERT INTO "Comment"("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4)RETURNING *',
+        'INSERT INTO "Comment" ("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
