@@ -15,11 +15,13 @@ it('Create a post', async () => {
       $text: String!
       $tags: [String]
       $isTesting: Boolean
+      $userId: ID!
     ) {
       createPost(
         title: $title
         text: $text
         tags: $tags
+        userId: $userId
         isTesting: $isTesting
       ) {
         id
@@ -30,6 +32,7 @@ it('Create a post', async () => {
         }
         createdAt
         tags
+        userId
       }
     }
   `;
@@ -40,10 +43,11 @@ it('Create a post', async () => {
       title: 'testPost',
       text: 'This is a test post',
       tags: ['test', 'tag'],
+      userId: 1,
       isTesting: true,
     },
   });
-
+  console.log(result);
   const { title, text } = result.data.createPost;
   expect(title.trim() && text.trim()).not.toBe('');
   expect(result.data.createPost).toBeTruthy;

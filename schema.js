@@ -10,7 +10,7 @@ const typeDefs = gql`
     comments: [Comment]
     createdAt: Date
     tags: [String]
-    userId: Int!
+    userId: ID!
   }
 
   type Comment {
@@ -52,7 +52,7 @@ const typeDefs = gql`
       title: String!
       text: String!
       tags: [String]
-      userId: Int!
+      userId: ID!
       isTesting: Boolean
     ): Post
     createComment(
