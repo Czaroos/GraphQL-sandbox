@@ -2,6 +2,7 @@ const { GraphQLScalarType } = require('graphql');
 const { Kind } = require('graphql/language');
 const { setQuery, setTransaction } = require('./utils/queries');
 const { getFiles, uploadFile } = require('./utils/upload');
+const { AuthenticationError } = require('apollo-server');
 
 const resolvers = {
   Query: {
@@ -33,7 +34,9 @@ const resolvers = {
       { user }
     ) => {
       if (!user)
-        return new Error('You must be logged in to perform createPost action!');
+        return new AuthenticationError(
+          'You must be logged in to perform createPost action!'
+        );
       const createdAt = new Date();
       const values = [title, text, tags, createdAt];
 
