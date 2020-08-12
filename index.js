@@ -2,7 +2,7 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const resolvers = require('./resolvers');
 const { client } = require('./databaseConnection');
-const { getUser } = require('./models/User');
+// const User = require('./models/User');
 
 const server = new ApolloServer({
   typeDefs,
@@ -10,8 +10,8 @@ const server = new ApolloServer({
   context: ({ req }) => {
     const token = req.headers.authorization || '';
     const body = req.body;
-    // const user = getUser(token) || null;
-    return { user, body };
+    // const user = User.getUser(token);
+    // return { user, body };
   },
 });
 

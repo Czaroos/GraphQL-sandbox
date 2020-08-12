@@ -3,6 +3,7 @@ const { Kind } = require('graphql/language');
 const { setQuery, setTransaction } = require('./utils/queries');
 const { getFiles, uploadFile } = require('./utils/upload');
 const { AuthenticationError } = require('apollo-server');
+const { logInUser } = require('./models/User');
 
 const resolvers = {
   Query: {
@@ -62,6 +63,9 @@ const resolvers = {
       );
       return test[0];
     },
+
+    logIn: async (_, { email, password }, context) =>
+      await logInUser(email, password),
   },
 
   Date: new GraphQLScalarType({
