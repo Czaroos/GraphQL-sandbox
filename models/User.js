@@ -1,6 +1,7 @@
 const { setQuery } = require('../utils/queries');
 const { AuthenticationError } = require('apollo-server');
 const jwt = require('jsonwebtoken');
+sha3_512 = require('js-sha3').sha3_512;
 require('dotenv').config();
 
 const User = {
@@ -19,6 +20,8 @@ const User = {
     return user;
   },
   logInUser: async (email, password) => {
+    /*var password = sha3_512(password);
+    console.log(password);*/
     const user = await setQuery(`SELECT * FROM "users" WHERE email='${email}'`);
     if (!user) return new AuthenticationError('User doesnt exist in database');
     if (user[0].password !== password)
