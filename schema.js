@@ -52,7 +52,6 @@ const typeDefs = gql`
       title: String!
       text: String!
       tags: [String]
-      userId: ID!
       isTesting: Boolean
     ): Post
     createComment(

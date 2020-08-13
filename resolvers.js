@@ -31,7 +31,7 @@ const resolvers = {
   Mutation: {
     createPost: async (
       _,
-      { title, text, tags, userId, isTesting = false },
+      { title, text, tags, isTesting = false },
       { user }
     ) => {
       if (!user)
@@ -39,6 +39,7 @@ const resolvers = {
           'You must be logged in to perform createPost action!'
         );
       const createdAt = new Date();
+      const userId = user.userId;
       const values = [title, text, tags, createdAt, userId];
 
       const res = await setTransaction(
