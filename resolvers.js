@@ -34,7 +34,6 @@ const resolvers = {
       { title, text, tags, userId, isTesting = false },
       { user }
     ) => {
-      console.log(user);
       if (!user)
         return new AuthenticationError(
           'You must be logged in to perform createPost action!'

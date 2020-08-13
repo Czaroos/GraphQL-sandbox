@@ -7,13 +7,12 @@ const { getUser } = require('./models/User');
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
+  context: async ({ req }) => {
     const token = req.headers.authorization || '';
-    // console.log(token);
-    // const body = req.body;
-    const user = getUser(token);
-    // return { user, body };
-    return { user };
+    if (token !== '') {
+      const user = await getUser(token);
+      return { user };
+    }
   },
 });
 

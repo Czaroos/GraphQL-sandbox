@@ -5,24 +5,29 @@ require('dotenv').config();
 
 const User = {
   getUser: async (token) => {
-    console.log(token);
-    const user = await setQuery(`SELECT * FROM "users" WHERE token='${token}'`);
-    return user[0];
+    const user = await jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET,
+      async (err, user) => {
+        if (err) return console.log('error');
+        const correspondingUser = await setQuery(
+          `SELECT * FROM "users" WHERE "userId"=${user.userId}`
+        );
+        return correspondingUser[0];
+      }
+    );
+    return user;
   },
   logInUser: async (email, password) => {
     const user = await setQuery(`SELECT * FROM "users" WHERE email='${email}'`);
     if (!user) return new AuthenticationError('User doesnt exist in database');
     if (user[0].password !== password)
       return new AuthenticationError('Incorrect password');
-
     const token = jwt.sign(
-      { mail: user.mail },
+      { userId: user[0].userId },
       process.env.ACCESS_TOKEN_SECRET
     );
-    const userAssignedToken = await setQuery(
-      `UPDATE "users" SET token='${token}' WHERE email='${email}'`
-    );
-    console.log({ ...user[0], token });
+
     return { ...user[0], token };
   },
 };
