@@ -21,6 +21,12 @@ const resolvers = {
       );
       return res;
     },
+    getPostByTags: async (_, { tags }) => {
+      const res = await setQuery(
+        `SELECT * FROM "Post" WHERE tags=array['${tags}']`
+      );
+      return res;
+    },
     getBlogsIFollow: async () => {
       const res = await setQuery(`SELECT * FROM "BlogIFollow"`);
       return res;

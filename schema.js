@@ -45,6 +45,7 @@ const typeDefs = gql`
     getPostComments(postId: ID!): [Comment]
     getBlogsIFollow: [BlogIFollow]
     files: [File!]
+    getPostByTags(tags: [String!]): [Post]
   }
 
   type Mutation {
