@@ -1,14 +1,12 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-  scalar Date
-
   type Post {
     id: ID!
     title: String!
     text: String!
     comments: [Comment]
-    createdAt: Date
+    createdAt: String!
     tags: [String]
     userId: ID!
   }
@@ -22,7 +20,7 @@ const typeDefs = gql`
   type Comment {
     postId: ID!
     text: String!
-    createdAt: Date!
+    createdAt: String!
     user: String!
   }
 

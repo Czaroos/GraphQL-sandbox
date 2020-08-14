@@ -5,6 +5,7 @@ const { getFiles, uploadFile } = require('./utils/upload');
 const { AuthenticationError } = require('apollo-server');
 const { logInUser } = require('./models/User');
 const { addTag } = require('./models/Tag');
+const { dateToString } = require('./utils/date');
 
 const resolvers = {
   Query: {
@@ -51,12 +52,12 @@ const resolvers = {
         return new AuthenticationError(
           'You must be logged in to perform createPost action!'
         );
-      const createdAt = new Date();
+      const dateString = dateToString(new Date());
       const userId = user.userId;
       const capitalizedTags = tags.map((tag) =>
         tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
       );
-      const values = [title, text, createdAt, userId, capitalizedTags];
+      const values = [title, text, dateString, userId, capitalizedTags];
 
       const res = await setTransaction(
         'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags") VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -87,8 +88,8 @@ const resolvers = {
       await uploadFile(_, { file, postId, isTesting }),
 
     createComment: async (_, { postId, text, user, isTesting = false }) => {
-      const createdat = new Date();
-      const values = [postId, text, user, createdat];
+      const dateString = dateToString(new Date());
+      const values = [postId, text, user, dateString];
 
       const test = await setTransaction(
         'INSERT INTO "Comment" ("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4) RETURNING *',
@@ -101,23 +102,6 @@ const resolvers = {
     logIn: async (_, { email, password }, context) =>
       await logInUser(email, password),
   },
-
-  Date: new GraphQLScalarType({
-    name: 'Date',
-    description: 'Date custom scalar type',
-    parseValue(value) {
-      return new Date(value);
-    },
-    serialize(value) {
-      return new Date(value).toDateString();
-    },
-    parseLiteral(ast) {
-      if (ast.kind === Kind.INT) {
-        return parseInt(ast.value, 10);
-      }
-      return null;
-    },
-  }),
 };
 
 module.exports = resolvers;

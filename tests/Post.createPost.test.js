@@ -3,7 +3,6 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('../schema');
 const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
-const { pool } = require('../databaseConnection');
 
 const server = new ApolloServer({ typeDefs, resolvers });
 const { mutate } = createTestClient(server);
