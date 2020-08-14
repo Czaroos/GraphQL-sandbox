@@ -3,8 +3,18 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('../schema');
 const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
+const { getUser } = require('../models/User');
 
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async () => {
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTU5NzQwMDM5M30.Kkyexcq9iVPQknW4SWDTadFSNltGZ0FojSbepLEa0yo';
+    const user = await getUser(token);
+    return { user };
+  },
+});
 const { mutate } = createTestClient(server);
 
 it('Create a post', async () => {
@@ -14,13 +24,11 @@ it('Create a post', async () => {
       $text: String!
       $tags: [String]
       $isTesting: Boolean
-      $userId: ID!
     ) {
       createPost(
         title: $title
         text: $text
         tags: $tags
-        userId: $userId
         isTesting: $isTesting
       ) {
         id
@@ -42,11 +50,10 @@ it('Create a post', async () => {
       title: 'testPost',
       text: 'This is a test post',
       tags: ['test', 'tag'],
-      userId: 1,
       isTesting: true,
     },
   });
-  console.log(result);
+
   const { title, text } = result.data.createPost;
   expect(title.trim() && text.trim()).not.toBe('');
   expect(result.data.createPost).toBeTruthy;
