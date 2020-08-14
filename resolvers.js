@@ -40,6 +40,12 @@ const resolvers = {
       return res;
     },
     files: async () => await getFiles(),
+    getPostsByDate: async (_, { month, year }) => {
+      const res = await setQuery(
+        `SELECT * FROM "Post" WHERE "createdAt" LIKE '%${month}-${year}'`
+      );
+      return res;
+    },
   },
 
   Mutation: {

@@ -50,6 +50,7 @@ const typeDefs = gql`
     getBlogsIFollow: [BlogIFollow]
     files: [File!]
     getPostByTags(tags: [String!]): [Post]
+    getPostsByDate(month: String, year: String): [Post]
   }
 
   type Mutation {
