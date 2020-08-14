@@ -13,6 +13,12 @@ const typeDefs = gql`
     userId: ID!
   }
 
+  type Tag {
+    id: ID!
+    tag: String
+    weight: Int
+  }
+
   type Comment {
     postId: ID!
     text: String!

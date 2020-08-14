@@ -4,6 +4,7 @@ const { setQuery, setTransaction } = require('./utils/queries');
 const { getFiles, uploadFile } = require('./utils/upload');
 const { AuthenticationError } = require('apollo-server');
 const { logInUser } = require('./models/User');
+const { addTag } = require('./models/Tag');
 
 const resolvers = {
   Query: {
@@ -46,14 +47,27 @@ const resolvers = {
         );
       const createdAt = new Date();
       const userId = user.userId;
-      const values = [title, text, tags, createdAt, userId];
+      const values = [title, text, createdAt, userId];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, tags, "createdAt", "userId") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        'INSERT INTO "Post" (title, text, "createdAt", "userId") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
-      return res[0];
+      const tagRes = await Promise.all(
+        tags.map(async (tag) => {
+          try {
+            return await addTag(tag);
+          } catch (err) {
+            throw err;
+          }
+        })
+      );
+      tags = tagRes.map((tag) => {
+        return tag[0].tag;
+      });
+
+      return { ...res[0], tags };
     },
 
     uploadFile: async (_, { file, postId, isTesting = false }) =>
