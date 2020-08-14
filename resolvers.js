@@ -47,15 +47,20 @@ const resolvers = {
         );
       const createdAt = new Date();
       const userId = user.userId;
-      const values = [title, text, createdAt, userId];
+      const capitalizedTags = tags.map((tag) =>
+        tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
+      );
+      const values = [title, text, createdAt, userId, capitalizedTags];
 
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, "createdAt", "userId") VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags") VALUES ($1, $2, $3, $4, $5) RETURNING *',
         values,
         isTesting
       );
+
+      // add tag to db or increment its weight
       const tagRes = await Promise.all(
-        tags.map(async (tag) => {
+        capitalizedTags.map(async (tag) => {
           try {
             return await addTag(tag);
           } catch (err) {
@@ -63,6 +68,8 @@ const resolvers = {
           }
         })
       );
+
+      // return tag name only
       tags = tagRes.map((tag) => {
         return tag[0].tag;
       });
