@@ -24,7 +24,13 @@ const resolvers = {
     },
     getPostByTags: async (_, { tags }) => {
       const res = await setQuery(
-        `SELECT * FROM "Post" WHERE tags=array['${tags}']`
+        `SELECT * FROM "Post" AS t
+        WHERE (
+            SELECT true 
+            FROM unnest(t.tags) AS n
+            WHERE n ILIKE '${tags}'
+            LIMIT 1
+        );`
       );
       return res;
     },
