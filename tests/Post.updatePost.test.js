@@ -60,8 +60,6 @@ it('Update a post', async () => {
     },
   });
 
-  const { title, text } = result.data.updatePost;
-  expect(title.trim() && text.trim()).not.toBe('');
   expect(result.data.updatePost).toBeTruthy();
   expect(result.data.updatePost.id).toBe('264');
   expect(result.data.updatePost.title).toBe('testUpdate');
