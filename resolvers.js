@@ -61,22 +61,32 @@ const resolvers = {
       const capitalizedTags = tags.map((tag) =>
         tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
       );
+      let uploadedFile = null;
+      let res = null;
 
-      const uploadedFile = await uploadFile(_, { file, isTesting });
-
-      const values = [
-        title,
-        text,
-        dateString,
-        userId,
-        capitalizedTags,
-        uploadedFile.path,
-      ];
-      const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags", "imageUrl") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-        values,
-        isTesting
-      );
+      if (file) {
+        uploadedFile = await uploadFile(_, { file, isTesting });
+        const values = [
+          title,
+          text,
+          dateString,
+          userId,
+          capitalizedTags,
+          uploadedFile.path || null,
+        ];
+        res = await setTransaction(
+          'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags", "imageUrl") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+          values,
+          isTesting
+        );
+      } else {
+        const values = [title, text, dateString, userId, capitalizedTags];
+        res = await setTransaction(
+          'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+          values,
+          isTesting
+        );
+      }
 
       // add tag to db or increment its weight
       const tagRes = await Promise.all(
@@ -110,7 +120,6 @@ const resolvers = {
         _,
         isTesting
       );
-      console.log(res[0]);
       return res[0];
     },
     uploadFile: async (_, { file, isTesting = false }) =>
