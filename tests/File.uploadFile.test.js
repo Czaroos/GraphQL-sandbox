@@ -11,12 +11,11 @@ const { mutate } = createTestClient(server);
 
 it('Upload a file', async () => {
   const UPLOAD_FILE = gql`
-    mutation UPLOAD_FILE($file: Upload!, $postId: ID!, $isTesting: Boolean) {
-      uploadFile(file: $file, postId: $postId, isTesting: $isTesting) {
+    mutation UPLOAD_FILE($file: Upload!, $isTesting: Boolean) {
+      uploadFile(file: $file, isTesting: $isTesting) {
         filename
         mimetype
         path
-        postId
       }
     }
   `;
@@ -32,17 +31,15 @@ it('Upload a file', async () => {
           mimetype: `image/png`,
         });
       }),
-      postId: 245,
       isTesting: true,
     },
   });
 
-  const { filename, mimetype, path, postId } = result.data.uploadFile;
+  const { filename, mimetype, path } = result.data.uploadFile;
   expect(result.data.uploadFile).toBeTruthy();
   expect(path).toBe('uploaded/t1.png');
   expect(filename).toBe('t1.png');
   expect(mimetype).toBe('image/png');
-  expect(postId).toBe('245');
   const fileExists = await fs.promises
     .access(path)
     .then(() => true)

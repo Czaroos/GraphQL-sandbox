@@ -34,7 +34,7 @@ const getFiles = async () => {
   });
 };
 
-const uploadFile = async (_, { file, postId, isTesting = false }) => {
+const uploadFile = async (_, { file, isTesting = false }) => {
   const directoryExists = await fs.promises
     .access('uploaded')
     .then(() => true)
@@ -43,13 +43,13 @@ const uploadFile = async (_, { file, postId, isTesting = false }) => {
     mkdirSync('uploaded', { recursive: true });
   }
   const upload = await processUpload(file);
-  const values = [postId, upload.path];
+  const values = [upload.path];
   await setTransaction(
-    'INSERT INTO "Image" ("PostId", "url") VALUES ($1,$2) RETURNING *',
+    'INSERT INTO "Image" ("url") VALUES ($1) RETURNING *',
     values,
     isTesting
   );
-  return { ...upload, postId };
+  return upload;
 };
 
 module.exports = { processUpload, getFiles, uploadFile };

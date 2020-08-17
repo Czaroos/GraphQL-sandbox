@@ -19,6 +19,8 @@ it('Get all posts', async () => {
         }
         createdAt
         tags
+        userId
+        imageUrl
       }
     }
   `;

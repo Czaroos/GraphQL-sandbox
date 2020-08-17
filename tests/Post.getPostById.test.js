@@ -19,6 +19,8 @@ it('Get one post by ID', async () => {
         }
         createdAt
         tags
+        userId
+        imageUrl
       }
     }
   `;

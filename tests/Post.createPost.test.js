@@ -4,6 +4,8 @@ const typeDefs = require('../schema');
 const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
 const { getUser } = require('../models/User');
+const fs = require('fs');
+const fileStream = fs.createReadStream('tests/testFilesInput/t1.png');
 
 const server = new ApolloServer({
   typeDefs,
@@ -24,12 +26,14 @@ it('Create a post', async () => {
       $text: String!
       $tags: [String]
       $isTesting: Boolean
+      $file: Upload
     ) {
       createPost(
         title: $title
         text: $text
         tags: $tags
         isTesting: $isTesting
+        file: $file
       ) {
         id
         title
@@ -40,6 +44,7 @@ it('Create a post', async () => {
         createdAt
         tags
         userId
+        imageUrl
       }
     }
   `;
@@ -51,6 +56,14 @@ it('Create a post', async () => {
       text: 'This is a test post',
       tags: ['test', 'tag'],
       isTesting: true,
+      file: new Promise((resolve) => {
+        resolve({
+          createReadStream: () => fileStream,
+          stream: fileStream,
+          filename: 't1.png',
+          mimetype: `image/png`,
+        });
+      }),
     },
   });
 

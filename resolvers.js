@@ -55,7 +55,7 @@ const resolvers = {
   Mutation: {
     createPost: async (
       _,
-      { title, text, tags, isTesting = false },
+      { title, text, tags, isTesting = false, file },
       { user }
     ) => {
       if (!user)
@@ -67,10 +67,19 @@ const resolvers = {
       const capitalizedTags = tags.map((tag) =>
         tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
       );
-      const values = [title, text, dateString, userId, capitalizedTags];
 
+      const uploadedFile = await uploadFile(_, { file });
+
+      const values = [
+        title,
+        text,
+        dateString,
+        userId,
+        capitalizedTags,
+        uploadedFile.path,
+      ];
       const res = await setTransaction(
-        'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags") VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags", "imageUrl") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
         values,
         isTesting
       );
@@ -94,8 +103,8 @@ const resolvers = {
       return { ...res[0], tags };
     },
 
-    uploadFile: async (_, { file, postId, isTesting = false }) =>
-      await uploadFile(_, { file, postId, isTesting }),
+    uploadFile: async (_, { file, isTesting = false }) =>
+      await uploadFile(_, { file, isTesting }),
 
     createComment: async (_, { postId, text, user, isTesting = false }) => {
       const dateString = dateToString(new Date());
