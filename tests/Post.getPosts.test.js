@@ -26,8 +26,8 @@ it('Get all posts', async () => {
     query: GET_POSTS,
   });
 
-  expect(result.data.getPosts).toBeTruthy;
+  expect(result.data.getPosts).toBeTruthy();
   result.data.getPosts.forEach((post) => {
-    expect(post).toBeTruthy;
+    expect(post).toBeTruthy();
   });
 });

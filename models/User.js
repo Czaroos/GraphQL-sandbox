@@ -21,7 +21,6 @@ const User = {
   },
   logInUser: async (email, password) => {
     var password = sha3_512(password);
-    console.log(password);
     const user = await setQuery(`SELECT * FROM "users" WHERE email='${email}'`);
     if (!user) return new AuthenticationError('User doesnt exist in database');
     if (user[0].password !== password)

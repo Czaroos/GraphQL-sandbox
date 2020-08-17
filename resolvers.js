@@ -129,19 +129,20 @@ const resolvers = {
       const dateString = dateToString(new Date());
       const values = [postId, text, user, dateString];
 
-      const test = await setTransaction(
+      const res = await setTransaction(
         'INSERT INTO "Comment" ("postId", text, "user", "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
-      return test[0];
+      return res[0];
     },
     updateComment: async (_, { text, id, isTesting = false }) => {
-      const test = await setTransaction(
+      const res = await setTransaction(
         `UPDATE "Comment" SET text='${text}'  WHERE id='${id}' RETURNING *`,
+        _,
         isTesting
       );
-      return test[0];
+      return res[0];
     },
     updatePost: async (
       _,
@@ -149,9 +150,9 @@ const resolvers = {
     ) => {
       if (tags && file) {
         uploadedFile = await uploadFile(_, { file, isTesting });
-        const test = await setTransaction(
+        const res = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
-          console.log(uploadedFile.path),
+          _,
           isTesting
         );
         const capitalizedTags = tags.map((tag) =>
@@ -169,19 +170,21 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return test[0];
+        return res[0];
       }
       if (file) {
         uploadedFile = await uploadFile(_, { file, isTesting });
-        const test = await setTransaction(
+        const res = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
+          _,
           isTesting
         );
-        return test[0];
+        return res[0];
       }
       if (tags) {
-        const test = await setTransaction(
+        const res = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}'  WHERE id='${id}' RETURNING *`,
+          _,
           isTesting
         );
         const capitalizedTags = tags.map((tag) =>
@@ -199,13 +202,14 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return test[0];
+        return res[0];
       } else {
-        const test = await setTransaction(
+        const res = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}'  WHERE id='${id}' RETURNING *`,
+          _,
           isTesting
         );
-        return test[0];
+        return res[0];
       }
     },
     logIn: async (_, { email, password }, context) =>

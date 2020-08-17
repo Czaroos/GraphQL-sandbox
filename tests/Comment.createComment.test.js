@@ -21,9 +21,11 @@ it('Create a comment', async () => {
         user: $user
         isTesting: $isTesting
       ) {
+        id
         postId
         text
         user
+        createdAt
       }
     }
   `;
@@ -37,5 +39,6 @@ it('Create a comment', async () => {
       isTesting: true,
     },
   });
-  expect(result.data.createComment).toBeTruthy;
+
+  expect(result.data.createComment).toBeTruthy();
 });

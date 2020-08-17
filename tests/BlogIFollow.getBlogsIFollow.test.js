@@ -21,7 +21,7 @@ it('Get all blogs i follow', async () => {
   });
 
   expect(result.data.getBlogsIFollow.length).toEqual(2);
-  expect(result.data.getBlogsIFollow).toBeTruthy;
-  expect(result.data.getBlogsIFollow[0]).toBeTruthy;
-  expect(result.data.getBlogsIFollow[1]).toBeTruthy;
+  expect(result.data.getBlogsIFollow).toBeTruthy();
+  expect(result.data.getBlogsIFollow[0]).toBeTruthy();
+  expect(result.data.getBlogsIFollow[1]).toBeTruthy();
 });
