@@ -143,6 +143,21 @@ const resolvers = {
       );
       return test[0];
     },
+    updatePost: async (_, { title, id, text, tags, isTesting = false }) => {
+      if (tags) {
+        const test = await setTransaction(
+          `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}'  WHERE id='${id}' RETURNING *`,
+          isTesting
+        );
+        return test[0];
+      } else {
+        const test = await setTransaction(
+          `UPDATE "Post" SET title='${title}', "text"='${text}'  WHERE id='${id}' RETURNING *`,
+          isTesting
+        );
+        return test[0];
+      }
+    },
     logIn: async (_, { email, password }, context) =>
       await logInUser(email, password),
   },
