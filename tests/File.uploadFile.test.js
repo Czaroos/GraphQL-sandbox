@@ -32,7 +32,7 @@ it('Upload a file', async () => {
           mimetype: `image/png`,
         });
       }),
-      postId: 1,
+      postId: 245,
       isTesting: true,
     },
   });
@@ -42,7 +42,7 @@ it('Upload a file', async () => {
   expect(path).toBe('uploaded/t1.png');
   expect(filename).toBe('t1.png');
   expect(mimetype).toBe('image/png');
-  expect(postId).toBe('1');
+  expect(postId).toBe('245');
   const fileExists = await fs.promises
     .access(path)
     .then(() => true)
