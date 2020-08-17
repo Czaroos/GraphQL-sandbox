@@ -1,8 +1,9 @@
-const { createWriteStream, mkdir, readdirSync } = require('fs');
+const { createWriteStream, mkdirSync, readdirSync } = require('fs');
 const path = require('path');
 const uploadedDirPath = path.join(__dirname, 'uploaded');
 const mime = require('mime');
 const { setTransaction } = require('./queries');
+const fs = require('fs');
 
 const processUpload = async (upload) => {
   const { createReadStream, filename, mimetype } = await upload;
@@ -34,9 +35,13 @@ const getFiles = async () => {
 };
 
 const uploadFile = async (_, { file, postId, isTesting = false }) => {
-  mkdir('uploaded', { recursive: true }, (err) => {
-    if (err) throw err;
-  });
+  const directoryExists = await fs.promises
+    .access('uploaded')
+    .then(() => true)
+    .catch(() => false);
+  if (!directoryExists) {
+    mkdirSync('uploaded', { recursive: true });
+  }
   const upload = await processUpload(file);
   const values = [postId, upload.path];
   await setTransaction(

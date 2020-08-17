@@ -26,7 +26,7 @@ it('Get one post by ID', async () => {
   const result = await query({
     query: GET_POST_BY_ID,
     variables: {
-      id: 1,
+      id: 245,
     },
   });
 
