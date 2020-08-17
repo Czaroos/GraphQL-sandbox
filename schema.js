@@ -71,6 +71,7 @@ const typeDefs = gql`
     ): Comment
     deletePostById(id: ID!): Post
     deleteCommentById(id: ID!): Comment
+    updateComment(id: ID!, text: String!, isTesting: Boolean): Comment
     uploadFile(file: Upload!, isTesting: Boolean): File!
     logIn(email: String!, password: String!): User
   }

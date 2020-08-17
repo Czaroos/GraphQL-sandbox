@@ -124,9 +124,13 @@ const resolvers = {
       );
       return test[0];
     },
-
-    logIn: async (_, { email, password }, context) =>
-      await logInUser(email, password),
+    updateComment: async (_, { text, id, isTesting = false }) => {
+      const test = await setTransaction(
+        `UPDATE "Comment" SET text='${text}'  WHERE id='${id}' RETURNING *`,
+        isTesting
+      );
+      return test[0];
+    },
   },
 };
 
