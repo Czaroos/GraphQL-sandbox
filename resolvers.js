@@ -131,6 +131,8 @@ const resolvers = {
       );
       return test[0];
     },
+    logIn: async (_, { email, password }, context) =>
+      await logInUser(email, password),
   },
 };
 
