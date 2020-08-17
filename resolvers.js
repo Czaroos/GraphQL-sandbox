@@ -149,6 +149,23 @@ const resolvers = {
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}'  WHERE id='${id}' RETURNING *`,
           isTesting
         );
+        const capitalizedTags = tags.map((tag) =>
+          tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
+        );
+        const tagRes = await Promise.all(
+          capitalizedTags.map(async (tag) => {
+            try {
+              return await addTag(tag);
+            } catch (err) {
+              throw err;
+            }
+          })
+        );
+
+        // return tag name only
+        tags = tagRes.map((tag) => {
+          return tag[0].tag;
+        });
         return test[0];
       } else {
         const test = await setTransaction(
