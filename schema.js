@@ -18,6 +18,7 @@ const typeDefs = gql`
   }
 
   type Comment {
+    id: ID!
     postId: ID!
     text: String!
     createdAt: String!
