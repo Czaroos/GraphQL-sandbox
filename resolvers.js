@@ -46,6 +46,10 @@ const resolvers = {
       );
       return res;
     },
+    deletePostById: async (_, { id }) => {
+      const res = await setQuery(`DELETE FROM "Post" WHERE "id" =${id}`);
+      return res[0];
+    },
   },
 
   Mutation: {

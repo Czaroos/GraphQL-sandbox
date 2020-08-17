@@ -46,6 +46,7 @@ const typeDefs = gql`
   type Query {
     getPosts: [Post]
     getPostById(id: ID!): Post
+    deletePostById(id: ID!): Post
     getPostComments(postId: ID!): [Comment]
     getBlogsIFollow: [BlogIFollow]
     files: [File!]
