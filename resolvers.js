@@ -1,5 +1,3 @@
-const { GraphQLScalarType } = require('graphql');
-const { Kind } = require('graphql/language');
 const { setQuery, setTransaction } = require('./utils/queries');
 const { getFiles, uploadFile } = require('./utils/upload');
 const { AuthenticationError } = require('apollo-server');
@@ -64,7 +62,7 @@ const resolvers = {
         tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
       );
 
-      const uploadedFile = await uploadFile(_, { file });
+      const uploadedFile = await uploadFile(_, { file, isTesting });
 
       const values = [
         title,
@@ -98,16 +96,21 @@ const resolvers = {
 
       return { ...res[0], tags };
     },
-    deletePostById: async (_, { id }) => {
-      const res = await setQuery(
-        `DELETE FROM "Post" WHERE "id" =${id}RETURNING *`
+    deletePostById: async (_, { id, isTesting = false }) => {
+      const res = await setTransaction(
+        `DELETE FROM "Post" WHERE "id"=${id} RETURNING *`,
+        _,
+        isTesting
       );
       return res[0];
     },
-    deleteCommentById: async (_, { id }) => {
-      const res = await setQuery(
-        `DELETE FROM "Comment" WHERE "id" =${id}RETURNING *`
+    deleteCommentById: async (_, { id, isTesting = false }) => {
+      const res = await setTransaction(
+        `DELETE FROM "Comment" WHERE "id"=${id} RETURNING *`,
+        _,
+        isTesting
       );
+      console.log(res[0]);
       return res[0];
     },
     uploadFile: async (_, { file, isTesting = false }) =>
@@ -118,7 +121,7 @@ const resolvers = {
       const values = [postId, text, user, dateString];
 
       const test = await setTransaction(
-        'INSERT INTO "Comment" ("postId", text, "user", "createdat") VALUES ($1, $2, $3, $4) RETURNING *',
+        'INSERT INTO "Comment" ("postId", text, "user", "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
