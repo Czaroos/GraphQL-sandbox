@@ -38,9 +38,6 @@ it('Create a post', async () => {
         id
         title
         text
-        comments {
-          text
-        }
         createdAt
         tags
         userId

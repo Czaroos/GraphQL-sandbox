@@ -14,9 +14,6 @@ it('Get all posts', async () => {
         id
         title
         text
-        comments {
-          text
-        }
         createdAt
         tags
         userId

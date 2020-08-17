@@ -14,9 +14,6 @@ it('Delete one post by ID', async () => {
         id
         title
         text
-        comments {
-          text
-        }
         createdAt
         tags
         userId

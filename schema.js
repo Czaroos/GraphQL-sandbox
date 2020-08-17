@@ -5,7 +5,6 @@ const typeDefs = gql`
     id: ID!
     title: String!
     text: String!
-    comments: [Comment]
     createdAt: String!
     tags: [String]
     userId: ID!
