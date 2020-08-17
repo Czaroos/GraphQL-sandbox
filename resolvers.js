@@ -46,10 +46,6 @@ const resolvers = {
       );
       return res;
     },
-    deletePostById: async (_, { id }) => {
-      const res = await setQuery(`DELETE FROM "Post" WHERE "id" =${id}`);
-      return res[0];
-    },
   },
 
   Mutation: {
@@ -102,7 +98,18 @@ const resolvers = {
 
       return { ...res[0], tags };
     },
-
+    deletePostById: async (_, { id }) => {
+      const res = await setQuery(
+        `DELETE FROM "Post" WHERE "id" =${id}RETURNING *`
+      );
+      return res[0];
+    },
+    deleteCommentById: async (_, { id }) => {
+      const res = await setQuery(
+        `DELETE FROM "Comment" WHERE "id" =${id}RETURNING *`
+      );
+      return res[0];
+    },
     uploadFile: async (_, { file, isTesting = false }) =>
       await uploadFile(_, { file, isTesting }),
 

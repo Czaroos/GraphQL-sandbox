@@ -19,6 +19,7 @@ const typeDefs = gql`
   }
 
   type Comment {
+    id: ID!
     postId: ID!
     text: String!
     createdAt: String!
@@ -46,7 +47,7 @@ const typeDefs = gql`
   type Query {
     getPosts: [Post]
     getPostById(id: ID!): Post
-    deletePostById(id: ID!): Post
+
     getPostComments(postId: ID!): [Comment]
     getBlogsIFollow: [BlogIFollow]
     files: [File!]
@@ -68,6 +69,8 @@ const typeDefs = gql`
       user: String!
       isTesting: Boolean
     ): Comment
+    deletePostById(id: ID!): Post
+    deleteCommentById(id: ID!): Comment
     uploadFile(file: Upload!, isTesting: Boolean): File!
     logIn(email: String!, password: String!): User
   }
