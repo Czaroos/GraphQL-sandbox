@@ -143,7 +143,42 @@ const resolvers = {
       );
       return test[0];
     },
-    updatePost: async (_, { title, id, text, tags, isTesting = false }) => {
+    updatePost: async (
+      _,
+      { title, id, text, tags, file, isTesting = false }
+    ) => {
+      if (tags && file) {
+        uploadedFile = await uploadFile(_, { file, isTesting });
+        const test = await setTransaction(
+          `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
+          console.log(uploadedFile.path),
+          isTesting
+        );
+        const capitalizedTags = tags.map((tag) =>
+          tag.replace(/(^\w{1})|(\s{1}\w{1})/g, (match) => match.toUpperCase())
+        );
+        const tagRes = await Promise.all(
+          capitalizedTags.map(async (tag) => {
+            try {
+              return await addTag(tag);
+            } catch (err) {
+              throw err;
+            }
+          })
+        );
+        tags = tagRes.map((tag) => {
+          return tag[0].tag;
+        });
+        return test[0];
+      }
+      if (file) {
+        uploadedFile = await uploadFile(_, { file, isTesting });
+        const test = await setTransaction(
+          `UPDATE "Post" SET title='${title}', "text"='${text}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
+          isTesting
+        );
+        return test[0];
+      }
       if (tags) {
         const test = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}'  WHERE id='${id}' RETURNING *`,
@@ -161,8 +196,6 @@ const resolvers = {
             }
           })
         );
-
-        // return tag name only
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
