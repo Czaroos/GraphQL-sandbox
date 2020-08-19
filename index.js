@@ -5,7 +5,7 @@ const resolvers = require('./resolvers');
 const { client } = require('./databaseConnection');
 const { getUser } = require('./models/User');
 
-const pubsub = new PubSub();
+pubsub = new PubSub();
 
 const server = new ApolloServer({
   typeDefs,

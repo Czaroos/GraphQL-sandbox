@@ -104,6 +104,7 @@ const resolvers = {
         return tag[0].tag;
       });
 
+      pubsub.publish(`post`, { post: { ...res[0], tags } });
       return { ...res[0], tags };
     },
     deletePostById: async (_, { id, isTesting = false }) => {
@@ -231,6 +232,11 @@ const resolvers = {
           throw new Error('Post not found');
         }
         return pubsub.asyncIterator(`comment ${postId}`);
+      },
+    },
+    post: {
+      subscribe: async (_, __, { pubsub }) => {
+        return pubsub.asyncIterator(`post`);
       },
     },
   },

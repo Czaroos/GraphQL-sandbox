@@ -83,6 +83,7 @@ const typeDefs = gql`
 
   type Subscription {
     comment(postId: ID!): Comment!
+    post: Post!
   }
 `;
 
