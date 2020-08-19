@@ -105,9 +105,9 @@ const resolvers = {
       });
 
       pubsub.publish(`post`, {
-        post: { mutation: 'CREATED', data: { ...res, tags } },
+        post: { mutation: 'CREATED', data: { res, tags } },
       });
-      return { ...res, tags };
+      return { res, tags };
     },
     deletePostById: async (_, { id, isTesting = false }, { pubsub }) => {
       const [res] = await setTransaction(
@@ -186,7 +186,13 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return res;
+        pubsub.publish(`post`, {
+          post: {
+            mutation: 'UPDATED',
+            data: { res, tags },
+          },
+        });
+        return { res, tags };
       }
       if (file) {
         uploadedFile = await uploadFile(_, { file, isTesting });
@@ -195,7 +201,13 @@ const resolvers = {
           _,
           isTesting
         );
-        return res;
+        pubsub.publish(`post`, {
+          post: {
+            mutation: 'UPDATED',
+            data: { res, tags },
+          },
+        });
+        return { res, tags };
       }
       if (tags) {
         const [res] = await setTransaction(
@@ -218,18 +230,29 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return res;
+        pubsub.publish(`post`, {
+          post: {
+            mutation: 'UPDATED',
+            data: { res, tags },
+          },
+        });
+        return { res, tags };
       } else {
         const [res] = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}'  WHERE id='${id}' RETURNING *`,
           _,
           isTesting
         );
-        return res;
+        pubsub.publish(`post`, {
+          post: {
+            mutation: 'UPDATED',
+            data: { res, tags },
+          },
+        });
+        return { res, tags };
       }
     },
-    logIn: async (_, { email, password }, context) =>
-      await logInUser(email, password),
+    logIn: async (_, { email, password }) => await logInUser(email, password),
   },
 
   Subscription: {
