@@ -12,8 +12,8 @@ const resolvers = {
       return res;
     },
     getPostById: async (_, { id }) => {
-      const res = await setQuery(`SELECT * FROM "Post" WHERE id=${id}`);
-      return res[0];
+      const [res] = await setQuery(`SELECT * FROM "Post" WHERE id=${id}`);
+      return res;
     },
     getPostComments: async (_, { postId }) => {
       const res = await setQuery(
@@ -74,14 +74,14 @@ const resolvers = {
           capitalizedTags,
           uploadedFile.path || null,
         ];
-        res = await setTransaction(
+        [res] = await setTransaction(
           'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags", "imageUrl") VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
           values,
           isTesting
         );
       } else {
         const values = [title, text, dateString, userId, capitalizedTags];
-        res = await setTransaction(
+        [res] = await setTransaction(
           'INSERT INTO "Post" (title, text, "createdAt", "userId", "tags") VALUES ($1, $2, $3, $4, $5) RETURNING *',
           values,
           isTesting
@@ -104,24 +104,32 @@ const resolvers = {
         return tag[0].tag;
       });
 
-      pubsub.publish(`post`, { post: { ...res[0], tags } });
-      return { ...res[0], tags };
+      pubsub.publish(`post`, {
+        post: { mutation: 'CREATED', data: { ...res, tags } },
+      });
+      return { ...res, tags };
     },
-    deletePostById: async (_, { id, isTesting = false }) => {
-      const res = await setTransaction(
+    deletePostById: async (_, { id, isTesting = false }, { pubsub }) => {
+      const [res] = await setTransaction(
         `DELETE FROM "Post" WHERE "id"=${id} RETURNING *`,
         _,
         isTesting
       );
-      return res[0];
+      pubsub.publish(`post`, {
+        post: {
+          mutation: 'DELETED',
+          data: res,
+        },
+      });
+      return res;
     },
     deleteCommentById: async (_, { id, isTesting = false }) => {
-      const res = await setTransaction(
+      const [res] = await setTransaction(
         `DELETE FROM "Comment" WHERE "id"=${id} RETURNING *`,
         _,
         isTesting
       );
-      return res[0];
+      return res;
     },
     uploadFile: async (_, { file, isTesting = false }) =>
       await uploadFile(_, { file, isTesting }),
@@ -134,23 +142,23 @@ const resolvers = {
       const dateString = dateToString(new Date());
       const values = [postId, text, user, dateString];
 
-      const res = await setTransaction(
+      const [res] = await setTransaction(
         'INSERT INTO "Comment" ("postId", text, "user", "createdAt") VALUES ($1, $2, $3, $4) RETURNING *',
         values,
         isTesting
       );
 
-      pubsub.publish(`comment ${postId}`, { comment: res[0] });
+      pubsub.publish(`comment ${postId}`, { comment: res });
 
-      return res[0];
+      return res;
     },
     updateComment: async (_, { text, id, isTesting = false }) => {
-      const res = await setTransaction(
+      const [res] = await setTransaction(
         `UPDATE "Comment" SET text='${text}'  WHERE id='${id}' RETURNING *`,
         _,
         isTesting
       );
-      return res[0];
+      return res;
     },
     updatePost: async (
       _,
@@ -158,7 +166,7 @@ const resolvers = {
     ) => {
       if (tags && file) {
         uploadedFile = await uploadFile(_, { file, isTesting });
-        const res = await setTransaction(
+        const [res] = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
           _,
           isTesting
@@ -178,19 +186,19 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return res[0];
+        return res;
       }
       if (file) {
         uploadedFile = await uploadFile(_, { file, isTesting });
-        const res = await setTransaction(
+        const [res] = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "imageUrl"='${uploadedFile.path}'  WHERE id='${id}' RETURNING *`,
           _,
           isTesting
         );
-        return res[0];
+        return res;
       }
       if (tags) {
-        const res = await setTransaction(
+        const [res] = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}', "tags"='{${tags}}'  WHERE id='${id}' RETURNING *`,
           _,
           isTesting
@@ -210,14 +218,14 @@ const resolvers = {
         tags = tagRes.map((tag) => {
           return tag[0].tag;
         });
-        return res[0];
+        return res;
       } else {
-        const res = await setTransaction(
+        const [res] = await setTransaction(
           `UPDATE "Post" SET title='${title}', "text"='${text}'  WHERE id='${id}' RETURNING *`,
           _,
           isTesting
         );
-        return res[0];
+        return res;
       }
     },
     logIn: async (_, { email, password }, context) =>

@@ -11,26 +11,28 @@ const User = {
       process.env.ACCESS_TOKEN_SECRET,
       async (err, user) => {
         if (err) return console.log('error');
-        const correspondingUser = await setQuery(
+        const [correspondingUser] = await setQuery(
           `SELECT * FROM "users" WHERE "userId"=${user.userId}`
         );
-        return correspondingUser[0];
+        return correspondingUser;
       }
     );
     return user;
   },
   logInUser: async (email, password) => {
     var password = sha3_512(password);
-    const user = await setQuery(`SELECT * FROM "users" WHERE email='${email}'`);
+    const [user] = await setQuery(
+      `SELECT * FROM "users" WHERE email='${email}'`
+    );
     if (!user) return new AuthenticationError('User doesnt exist in database');
-    if (user[0].password !== password)
+    if (user.password !== password)
       return new AuthenticationError('Incorrect password');
     const token = jwt.sign(
-      { userId: user[0].userId },
+      { userId: user.userId },
       process.env.ACCESS_TOKEN_SECRET
     );
 
-    return { ...user[0], token };
+    return { ...user, token };
   },
 };
 

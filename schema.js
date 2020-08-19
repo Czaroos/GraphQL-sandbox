@@ -83,7 +83,12 @@ const typeDefs = gql`
 
   type Subscription {
     comment(postId: ID!): Comment!
-    post: Post!
+    post: PostSubscriptionPayload!
+  }
+
+  type PostSubscriptionPayload {
+    mutation: String!
+    data: Post!
   }
 `;
 
