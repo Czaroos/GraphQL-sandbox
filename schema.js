@@ -80,6 +80,10 @@ const typeDefs = gql`
     uploadFile(file: Upload!, isTesting: Boolean): File!
     logIn(email: String!, password: String!): User
   }
+
+  type Subscription {
+    comment(postId: ID!): Comment!
+  }
 `;
 
 module.exports = typeDefs;

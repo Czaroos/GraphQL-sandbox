@@ -33,7 +33,7 @@ it('Create a comment', async () => {
   const result = await mutate({
     mutation: CREATE_COMMENT,
     variables: {
-      postId: 1,
+      postId: 265,
       text: 'text test',
       user: 'test user',
       isTesting: true,

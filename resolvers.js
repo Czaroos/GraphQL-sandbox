@@ -125,7 +125,11 @@ const resolvers = {
     uploadFile: async (_, { file, isTesting = false }) =>
       await uploadFile(_, { file, isTesting }),
 
-    createComment: async (_, { postId, text, user, isTesting = false }) => {
+    createComment: async (
+      _,
+      { postId, text, user, isTesting = false },
+      { pubsub }
+    ) => {
       const dateString = dateToString(new Date());
       const values = [postId, text, user, dateString];
 
@@ -134,6 +138,9 @@ const resolvers = {
         values,
         isTesting
       );
+
+      pubsub.publish(`comment ${postId}`, { comment: res[0] });
+
       return res[0];
     },
     updateComment: async (_, { text, id, isTesting = false }) => {
@@ -214,6 +221,18 @@ const resolvers = {
     },
     logIn: async (_, { email, password }, context) =>
       await logInUser(email, password),
+  },
+
+  Subscription: {
+    comment: {
+      subscribe: async (_, { postId }, { pubsub }) => {
+        const post = await setQuery(`SELECT * FROM "Post" WHERE id=${postId}`);
+        if (!post || post === []) {
+          throw new Error('Post not found');
+        }
+        return pubsub.asyncIterator(`comment ${postId}`);
+      },
+    },
   },
 };
 
