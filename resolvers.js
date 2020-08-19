@@ -129,6 +129,12 @@ const resolvers = {
         _,
         isTesting
       );
+      pubsub.publish(`comment ${res.postId}`, {
+        comment: {
+          mutation: 'DELETED',
+          data: res,
+        },
+      });
       return res;
     },
     uploadFile: async (_, { file, isTesting = false }) =>
@@ -148,7 +154,12 @@ const resolvers = {
         isTesting
       );
 
-      pubsub.publish(`comment ${postId}`, { comment: res });
+      pubsub.publish(`comment ${postId}`, {
+        comment: {
+          mutation: 'CREATED',
+          data: res,
+        },
+      });
 
       return res;
     },
@@ -158,6 +169,12 @@ const resolvers = {
         _,
         isTesting
       );
+      pubsub.publish(`comment ${res.postId}`, {
+        comment: {
+          mutation: 'UPDATED',
+          data: res,
+        },
+      });
       return res;
     },
     updatePost: async (
