@@ -2,7 +2,7 @@ const { createWriteStream, mkdirSync, readdirSync } = require('fs');
 const path = require('path');
 const uploadedDirPath = path.join(__dirname, '../uploaded');
 const mime = require('mime');
-const { setTransaction } = require('./queries');
+const { setTransaction } = require('./dbqueries');
 const fs = require('fs');
 
 const processUpload = async (upload) => {

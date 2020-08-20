@@ -6,7 +6,9 @@ const gql = require('graphql-tag');
 const { getUser } = require('../models/User');
 const fs = require('fs');
 const fileStream = fs.createReadStream('tests/testFilesInput/t1.png');
+const { PubSub } = require('graphql-subscriptions');
 
+pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -14,7 +16,7 @@ const server = new ApolloServer({
     const token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjcsImlhdCI6MTU5NzQwMDM5M30.Kkyexcq9iVPQknW4SWDTadFSNltGZ0FojSbepLEa0yo';
     const user = await getUser(token);
-    return { user };
+    return { user, pubsub };
   },
 });
 const { mutate } = createTestClient(server);

@@ -6,10 +6,13 @@ const gql = require('graphql-tag');
 const { getUser } = require('../models/User');
 const fs = require('fs');
 const fileStream = fs.createReadStream('tests/testFilesInput/t1.png');
+const { PubSub } = require('graphql-subscriptions');
 
+pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: () => pubsub,
 });
 const { mutate } = createTestClient(server);
 

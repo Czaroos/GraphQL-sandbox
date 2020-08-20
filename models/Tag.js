@@ -1,4 +1,4 @@
-const { setQuery } = require('../utils/queries');
+const { setQuery } = require('../utils/dbqueries');
 
 const addTag = async (tag) => {
   const tagExistsInDatabase = await setQuery(

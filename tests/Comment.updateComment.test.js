@@ -3,8 +3,10 @@ const { ApolloServer } = require('apollo-server');
 const typeDefs = require('../schema');
 const resolvers = require('../resolvers');
 const gql = require('graphql-tag');
+const { PubSub } = require('graphql-subscriptions');
 
-const server = new ApolloServer({ typeDefs, resolvers });
+pubsub = new PubSub();
+const server = new ApolloServer({ typeDefs, resolvers, context: () => pubsub });
 const { mutate } = createTestClient(server);
 
 it('Update a comment', async () => {

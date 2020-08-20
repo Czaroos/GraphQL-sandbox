@@ -1,4 +1,4 @@
-const { setQuery } = require('../utils/queries');
+const { setQuery } = require('../utils/dbqueries');
 const { AuthenticationError } = require('apollo-server');
 const jwt = require('jsonwebtoken');
 sha3_512 = require('js-sha3').sha3_512;
