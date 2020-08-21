@@ -18,8 +18,17 @@
   },
   "homepage": "https://github.com/Czaroos/GraphQL-sandbox#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.10.4",
+    "apollo-cache-inmemory": "^1.6.6",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
     "apollo-server": "^2.16.1",
+    "apollo-utilities": "^1.3.4",
     "body-parser": "^1.19.0",
+    "cross-fetch": "^3.0.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "graphql": "^15.3.0",
@@ -28,7 +37,8 @@
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "^8.5.1",
     "mime": "^2.4.6",
-    "pg": "^8.3.0"
+    "pg": "^8.3.0",
+    "subscriptions-transport-ws": "^0.9.18"
   },
   "devDependencies": {
     "apollo-server-testing": "^2.16.1",
